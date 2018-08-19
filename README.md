@@ -1,4 +1,4 @@
 # schmitz
 schmitz package
 
-`install_github('matschmitz/schmitz')`
+`devtools::install_github('matschmitz/schmitz')`
