@@ -1,4 +1,4 @@
 # schmitz
 schmitz package
 
-`install_github('rdotsch/rcicr', ref = 'development')`
+`install_github('matschmitz/schmitz', ref = 'development')`
