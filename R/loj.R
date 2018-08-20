@@ -1,9 +1,9 @@
-#' @title Schmitz Package
+#' @title Left Outter Join
 #'
-#' @description Left outter join on X
-#' @param X a data.table
-#' @param Y a data.table
-#' @param onCol a string or vector common to X and Y on which to merge the data
+#' @description Update and merge columuns from `Y` onto `X`. If data tables are loaded, make sure
+#'  to run `setDT(X)` and `setDT(Y)`.
+#' @param X,Y a data.tables
+#' @param onCol a string or character vector common to `X` and `Y` on which to merge the data
 #' @return NULL
 #' @examples NULL
 #' @export loj
