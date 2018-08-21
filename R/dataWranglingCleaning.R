@@ -24,3 +24,23 @@ numerify <- function(X) {
     }
     X[, (names(X)) := lapply(.SD, tryNumeric)]
 }
+
+#' @title Extract number from string
+#' @description Extracts a number from a string
+#' @param x A string.
+#' @return Extracted number.
+#' @examples extractNumber("A1")
+#' @importFrom stringr str_extract
+#' @export extractNumber
+extractNumber <- function(x, convertToNum = TRUE) {
+    num <- stringr::str_extract(x, "\\-*\\d+\\.*\\d*")
+    if(convertToNum) as.numeric(num)
+}
+
+#' @title Value Unmatching
+#' @description Inverse of \code{\link[base]{match}}.
+#' @param x A string.
+#' @return Extracted number.
+#' @examples 1 %ni% (1:3)
+#' @export %ni%
+"%ni%" <- Negate("%in%")
