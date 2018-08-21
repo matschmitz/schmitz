@@ -8,6 +8,7 @@
 #' @export loj
 loj <- function(X = NULL, Y = NULL, onCol = NULL) {
     warning("If X or Y are loaded, make sure to previously setDT(X) and setDT(Y).")
+    n <- names(Y)
     X[Y, (n) := mget(paste0("i.", n)), on = onCol]
 }
 
