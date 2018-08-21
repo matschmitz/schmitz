@@ -1,3 +1,6 @@
+#' @import data.table
+#' @import magrittr
+
 #' @title Left Outter Join
 #' @description Update and merge columuns from `Y` onto `X`. If data tables are loaded, make sure
 #'  to run `setDT(X)` and `setDT(Y)`.
