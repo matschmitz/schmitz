@@ -10,7 +10,10 @@
 #' @examples NULL
 #' @export loj
 loj <- function(X = NULL, Y = NULL, onCol = NULL) {
-    warning("If X or Y are loaded, make sure to previously setDT(X) and setDT(Y).")
+    # data.table bug: https://github.com/Rdatatable/data.table/issues/1017
+    if (truelength(X) == 0 | truelength(Y) == 0) stop("setDT(X) and setDT(Y) first")
+
+    # apply loj
     n <- names(Y)
     X[Y, (n) := mget(paste0("i.", n)), on = onCol]
 }
@@ -23,7 +26,7 @@ loj <- function(X = NULL, Y = NULL, onCol = NULL) {
 #' @export numerify
 numerify <- function(X) {
     tryNumeric <- function(y) {
-        if (!is.logical(y)) tryCatch(expr = {as.numeric(y)}, warning = function(cond) y) else y
+        if (!is.logical(y)) tryCatch(expr = {as.numeric(y)}, warning = function(w) y) else y
     }
     X[, (names(X)) := lapply(.SD, tryNumeric)]
 }
