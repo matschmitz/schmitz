@@ -10,7 +10,7 @@ numerify(X)
 \item{X}{Data.table}
 }
 \description{
-Tries to convert each column of a data.table `X` to numeric (except logicals).
+Try to convert each column of a data.table `X` to numeric (except logicals).
 }
 \examples{
 NULL

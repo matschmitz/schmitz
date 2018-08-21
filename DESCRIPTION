@@ -1,7 +1,7 @@
 Package: schmitz
 Type: Package
 Title: Schmitz Package
-Version: 0.1.1
+Version: 0.1.2
 Author: Mathias Schmitz
 Maintainer: Mathias Schmitz <mathias.schmitz@uclouvain.be>
 Description: My first package, just some custom functions

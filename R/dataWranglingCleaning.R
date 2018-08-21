@@ -1,5 +1,4 @@
 #' @title Left Outter Join
-#'
 #' @description Update and merge columuns from `Y` onto `X`. If data tables are loaded, make sure
 #'  to run `setDT(X)` and `setDT(Y)`.
 #' @param X,Y a data.tables
@@ -13,8 +12,7 @@ loj <- function(X = NULL, Y = NULL, onCol = NULL) {
 }
 
 #' @title Numerify
-#'
-#' @description Tries to convert each column of a data.table `X` to numeric (except logicals).
+#' @description Try to convert each column of a data.table `X` to numeric (except logicals).
 #' @param X Data.table
 #' @return NULL
 #' @examples NULL
