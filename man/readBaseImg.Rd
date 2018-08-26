@@ -4,10 +4,10 @@
 \alias{readBaseImg}
 \title{Read and scale base image}
 \usage{
-readBaseImg(imgPath)
+readBaseImg(baseImgPath, maxContrast = TRUE)
 }
 \arguments{
-\item{imgPath}{String specifying path to the base image.}
+\item{baseImgPath}{String specifying path to the base image.}
 }
 \value{
 Vector of pixels from the base image.

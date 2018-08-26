@@ -2,23 +2,27 @@
 % Please edit documentation in R/RC.R
 \name{genCI}
 \alias{genCI}
-\title{Generate classification image}
+\title{Generate Classification Image (CI)}
 \usage{
-genCI(res, stim, N)
+genCI(NM = NULL, filename = "combined.png", outpath = "./cis",
+  resize = NULL, preview = FALSE, ...)
 }
 \arguments{
-\item{res}{Numerical vector with the reponses.}
+\item{NM}{Noise mask as generated from \code{\link{genNM}}.}
 
-\item{stim}{Numerical vector specifying the stimuli number.}
+\item{filename}{String specifying the name of the ouput CI. Default is `"combined.png"`.}
 
-\item{N}{Matrix of noise pattern as generated with
-\code{\link[rcicr]{N <- generateStimuli2IFC(..., return_as_dataframe = TRUE)}}.}
-}
-\value{
-CI
+\item{outpath}{String specifying the output target path.}
+
+\item{resize}{Scalar specifying if the image should be resized.}
+
+\item{preview}{Logical indicating if the iamge should be previewed in the Viewer Panel.}
+
+\item{...}{List of parameters passed to \code{\link{genNM}}. If `NM` is provided, then ellipsis
+will be ignored.}
 }
 \description{
-Generate the Classification Image (CI) over a given set of responses.
+Generate the combinaed of the noise mask (NM) and the base image.
 }
 \examples{
 NULL
