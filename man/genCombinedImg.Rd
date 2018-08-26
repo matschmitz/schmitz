@@ -5,7 +5,7 @@
 \title{Generate combined image}
 \usage{
 genCombinedImg(CI, baseImg, filename = NULL, outpath = "./cis",
-  size = 512)
+  resize = NULL, printImg = FALSE)
 }
 \arguments{
 \item{CI}{Numerical vector of the CI, as generated with \code{\link{genCI}}.}
@@ -13,7 +13,9 @@ genCombinedImg(CI, baseImg, filename = NULL, outpath = "./cis",
 \item{baseImg}{Numerical vector containing the baseImg image or string pointing to the baseImg image file.
 If baseImg is a string, then the baseImg image must in .png or .jpeg.}
 
-\item{outpath}{String specifying the output target path}
+\item{outpath}{String specifying the output target path.}
+
+\item{resize}{Scalar specifying if the image should be resized.}
 }
 \description{
 Generate the combinaed image by imposing the selected noise on the base image.

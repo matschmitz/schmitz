@@ -11,7 +11,8 @@ genCI(res, stim, N)
 
 \item{stim}{Numerical vector specifying the stimuli number.}
 
-\item{N}{Matrix of noise pattern as generated with \code{\link[rcicr]{generateStimuli2IFC}}.}
+\item{N}{Matrix of noise pattern as generated with
+\code{\link[rcicr]{N <- generateStimuli2IFC(..., return_as_dataframe = TRUE)}}.}
 }
 \value{
 CI
