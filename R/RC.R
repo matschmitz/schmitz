@@ -43,9 +43,9 @@ scaleCI <- function(CI, baseImg, scaling = "matched") {
     if (is.character(baseImg)) baseImg <- readBaseImg(baseImg)
 
     if (scaling == "matched") {
-        scaledCI <- min(baseImg) + ((max(baseImg) - min(baseImg)) * (ci - min(ci)) / (max(ci) - min(ci)))
+        scaledCI <- min(baseImg) + ((max(baseImg) - min(baseImg)) * (CI - min(CI)) / (max(CI) - min(CI)))
     } else if (is.numeric(scaling)) { # constant scaling
-        scaledCI <- (ci + scaling)/(2 * scaling)
+        scaledCI <- (CI + scaling)/(2 * scaling)
     } else { # No scaling
         scaledCI <- CI
     }
