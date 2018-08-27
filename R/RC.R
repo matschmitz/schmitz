@@ -102,5 +102,7 @@ genCI <- function(mask = NULL, filename = "combined.png", outpath = "./cis",
 
     # Preview image
     if (preview) print( magick::image_read(imgPath) )
+
+    return(imgPath)
 }
 
