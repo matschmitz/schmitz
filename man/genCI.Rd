@@ -4,11 +4,12 @@
 \alias{genCI}
 \title{Generate Classification Image (CI)}
 \usage{
-genCI(NM = NULL, filename = "combined.png", outpath = "./cis",
+genCI(mask = NULL, filename = "combined.png", outpath = "./cis",
   resize = NULL, preview = FALSE, ...)
 }
 \arguments{
-\item{NM}{Noise mask as generated from \code{\link{genNM}}.}
+\item{mask}{Mask as generated from \code{\link{genMask}}. If `NULL` (default), then the `mask`
+will be generated automatically by calling \code{\link{genMask}}. See `...`.}
 
 \item{filename}{String specifying the name of the ouput CI. Default is `"combined.png"`.}
 
@@ -18,11 +19,11 @@ genCI(NM = NULL, filename = "combined.png", outpath = "./cis",
 
 \item{preview}{Logical indicating if the iamge should be previewed in the Viewer Panel.}
 
-\item{...}{List of parameters passed to \code{\link{genNM}}. If `NM` is provided, then ellipsis
+\item{...}{List of parameters passed to \code{\link{genMask}}. If `mask` is provided, then ellipsis
 will be ignored.}
 }
 \description{
-Generate the combinaed of the noise mask (NM) and the base image.
+Generate the combinaed of the noise mask (mask) and the base image.
 }
 \examples{
 NULL

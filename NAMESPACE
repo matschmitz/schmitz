@@ -3,7 +3,7 @@
 export("%ni%")
 export(extractNumber)
 export(genCI)
-export(genNM)
+export(genMask)
 export(loj)
 export(m_sd)
 export(numerify)
