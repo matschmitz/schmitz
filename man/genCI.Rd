@@ -4,9 +4,8 @@
 \alias{genCI}
 \title{Generate Classification Image (CI)}
 \usage{
-genCI(mask = NULL, filename = "combined.png",
-  outpath = "./cis/combined.png", resize = NULL, preview = FALSE,
-  ...)
+genCI(mask = NULL, filename = "combined.png", outpath = "./cis/",
+  resize = NULL, preview = FALSE, ...)
 }
 \arguments{
 \item{mask}{Mask as generated from \code{\link{genMask}}. If `NULL` (default), then the `mask`
