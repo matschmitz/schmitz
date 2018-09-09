@@ -1,8 +1,32 @@
+# LIBRARIES ----------------------------------------------------------------------------------------
 #' @importFrom png writePNG readPNG
 #' @importFrom jpeg readJPEG
 #' @importFrom magick image_read
 #' @importFrom imager width height Xc Yc
 
+# DATA ---------------------------------------------------------------------------------------------
+#' @title RC data
+#' @description Fake RC data
+#' @format A data frame with 80 rows and 4 variables:
+#' \describe{
+#'   \item{id}{Participant's unique identifier.}
+#'   \item{stimuli}{Stimuli number. This is pared with the noiseMatrix (\code{N}), e.g. stimuli 1
+#'     was generated from the base image and the first column of N (\code{N[, 1]}).}
+#'   \item{reponses}{Responses from participant. Can be \code{1} (oriented image selected) or
+#'     \code{-1} (inverted image selected).}
+#'   \item{condition}{Two conditions: \code{A} and \code{B}.}
+#' }
+#' @usage data(RC)
+"RC"
+
+#' @title noiseMatrix data
+#' @description Fake noiseMatrix data
+#' @format A (512^2)x20 matrix of noise as generated with
+#'   \code{N <- matrix(rcicr::generateCI2IFC(..., return_as_dataframe = TRUE))}.
+#' @usage data(N)
+"N"
+
+# FUNCTIONS ----------------------------------------------------------------------------------------
 #' @title Read and scale base image
 #' @description Read and scale the base image
 #' @param baseImgPath String specifying path to the base image.
@@ -76,7 +100,7 @@ genMask <- function(response, stim, noiseMatrix, baseImg, scaling = "matched") {
 #' @return NULL
 #' @examples NULL
 #' @export genCI
-genCI <- function(mask = NULL, filename = "combined.png", outpath = "./cis/combined.png",
+genCI <- function(mask = NULL, filename = "combined.png", outpath = "./cis/",
                   resize = NULL, preview = FALSE, ...) {
 
     # Retrieve arguments passed
