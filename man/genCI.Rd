@@ -4,8 +4,9 @@
 \alias{genCI}
 \title{Generate Classification Image (CI)}
 \usage{
-genCI(mask = NULL, filename = "combined.png", outpath = "./cis",
-  resize = NULL, preview = FALSE, ...)
+genCI(mask = NULL, filename = "combined.png",
+  outpath = "./cis/combined.png", resize = NULL, preview = FALSE,
+  ...)
 }
 \arguments{
 \item{mask}{Mask as generated from \code{\link{genMask}}. If `NULL` (default), then the `mask`
@@ -17,7 +18,7 @@ will be generated automatically by calling \code{\link{genMask}}. See `...`.}
 
 \item{resize}{Scalar specifying if the image should be resized.}
 
-\item{preview}{Logical indicating if the iamge should be previewed in the Viewer Panel.}
+\item{preview}{Logical indicating if the image should be previewed in the Viewer Panel.}
 
 \item{...}{List of parameters passed to \code{\link{genMask}}. If `mask` is provided, then ellipsis
 will be ignored.}
