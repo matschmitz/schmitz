@@ -1,6 +1,7 @@
 #' @importFrom png writePNG readPNG
 #' @importFrom jpeg readJPEG
 #' @importFrom magick image_read
+#' @importFrom imager width height Xc Yc
 
 #' @title Read and scale base image
 #' @description Read and scale the base image
@@ -69,13 +70,13 @@ genMask <- function(response, stim, noiseMatrix, baseImg, scaling = "matched") {
 #' @param filename String specifying the name of the ouput CI. Default is `"combined.png"`.
 #' @param outpath String specifying the output target path.
 #' @param resize Scalar specifying if the image should be resized.
-#' @param preview Logical indicating if the iamge should be previewed in the Viewer Panel.
+#' @param preview Logical indicating if the image should be previewed in the Viewer Panel.
 #' @param ... List of parameters passed to \code{\link{genMask}}. If `mask` is provided, then ellipsis
 #'   will be ignored.
 #' @return NULL
 #' @examples NULL
 #' @export genCI
-genCI <- function(mask = NULL, filename = "combined.png", outpath = "./cis",
+genCI <- function(mask = NULL, filename = "combined.png", outpath = "./cis/combined.png",
                   resize = NULL, preview = FALSE, ...) {
 
     # Retrieve arguments passed
@@ -101,8 +102,56 @@ genCI <- function(mask = NULL, filename = "combined.png", outpath = "./cis",
         magick::image_write(path = imgPath, format = "png")
 
     # Preview image
-    if (preview) print( magick::image_read(imgPath) )
+    if (preview) invisible(capture.output(print(magick::image_read(imgPath))))
 
     return(imgPath)
 }
 
+
+#' @title Get face region
+#' @description Returns a logical vector with the face region
+#' @param imgPath String specifying path to the base image.
+#' @param xpos Numeric specifiying the X position (relative to the center).
+#' @param ypos Numeric specifiying the Y position (relative to the center).
+#' @param faceWidth Numeric specifiying the width of the face region.
+#' @param faceHeight Numeric specifiying the height of the face region.
+#' @param preview Numeric specifiying the height of the face region.
+#' @param writeImgTo String specifying where and if the output image should be saved. Default is
+#'   NULL, meaning that the image will not be saved.
+#' @return Logical vector specifying the location of the face region
+#' @examples NULL
+#' @export getFaceRegion
+getFaceRegion <- function(imgPath,
+                          xpos = 0, ypos = 0, faceWidth = 1.4, faceHeight = 1.8,
+                          preview = TRUE, writeImgTo = NULL) {
+    # Read image and convert to matrix
+    face <- readBaseImg(imgPath)
+    faceLength <- sqrt(length(face)) # must be squared
+    face <- matrix(face, ncol = faceLength)
+
+    # Define face region: https://dahtah.github.io/imager/gimptools.html
+    Xcc <- function(im) imager::Xc(im) - imager::width(im)/2  + ypos
+    Ycc <- function(im) imager::Yc(im) - imager::height(im)/2 + xpos
+    NN <- imager::as.cimg( matrix(1:faceLength^2, nrow = faceLength) )
+    faceRegion <- (Xcc(NN)/faceHeight)^2 + (Ycc(NN)/faceWidth)^2 < 100^2
+    faceRegion <- as.vector(faceRegion)
+
+    # Preview in Viewer
+    if (preview) {
+        alphaMask <- matrix(1, faceLength, faceLength)
+        alphaMask[!faceRegion] <- 0.6
+        previewFace <- abind::abind(face, alphaMask, along = 3)
+        previewFacePath <- tempfile(fileext = ".png")
+        png::writePNG(previewFace, previewFacePath)
+        invisible(capture.output(print(magick::image_read(previewFacePath))))
+    }
+    # Write face
+    if (!is.null(writeImgTo)) {
+        alphaMask <- matrix(1, faceLength, faceLength)
+        alphaMask[!faceRegion] <- 0
+        printedFace <- abind::abind(face, alphaMask, along = 3)
+        png::writePNG(printedFace, writeImgTo)
+    }
+
+    invisible(faceRegion)
+}
