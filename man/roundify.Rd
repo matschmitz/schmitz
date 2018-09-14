@@ -4,13 +4,16 @@
 \alias{roundify}
 \title{Roundify}
 \usage{
-roundify(X, digits)
+roundify(X, digits = 2)
 }
 \arguments{
-\item{X}{Data.table}
+\item{X}{data.table}
+
+\item{digits}{integer}
 }
 \description{
-Try to counrd each numerical column of a data.table.
+Try to round each numerical column of a data.table and the prints it. Usefull with
+  rmarkdown reports.
 }
 \examples{
 NULL

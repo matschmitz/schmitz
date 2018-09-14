@@ -32,14 +32,17 @@ numerify <- function(X) {
 }
 
 #' @title Roundify
-#' @description Try to counrd each numerical column of a data.table.
-#' @param X Data.table
+#' @description Try to round each numerical column of a data.table and the prints it. Usefull with
+#'   rmarkdown reports.
+#' @param X data.table
+#' @param digits integer
 #' @return NULL
 #' @examples NULL
 #' @export roundify
-roundify <- function(X, digits) {
+roundify <- function(X, digits = 2) {
     .cols <- names(which(sapply(X, is.numeric)))
     X[, (.cols) := lapply(.SD, round, digits = digits), .SDcols = .cols]
+    print(X)
 }
 
 #' @title Extract number from string
