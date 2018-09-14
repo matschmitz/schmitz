@@ -31,7 +31,6 @@ numerify <- function(X) {
     X[, (names(X)) := lapply(.SD, tryNumeric)]
 }
 
-
 #' @title Roundify
 #' @description Try to counrd each numerical column of a data.table.
 #' @param X Data.table
