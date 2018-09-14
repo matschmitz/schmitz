@@ -31,6 +31,18 @@ numerify <- function(X) {
     X[, (names(X)) := lapply(.SD, tryNumeric)]
 }
 
+
+#' @title Roundify
+#' @description Try to counrd each numerical column of a data.table.
+#' @param X Data.table
+#' @return NULL
+#' @examples NULL
+#' @export roundify
+roundify <- function(X, digits) {
+    .cols <- names(which(sapply(X, is.numeric)))
+    X[, (.cols) := lapply(.SD, round, digits = digits), .SDcols = .cols]
+}
+
 #' @title Extract number from string
 #' @description Extracts a number from a string
 #' @param x A string.

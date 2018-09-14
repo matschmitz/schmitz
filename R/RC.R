@@ -121,14 +121,14 @@ genCI <- function(mask = NULL, filename = "combined.png", outpath = "./cis/",
     png::writePNG(combined, imgPath)
 
     # Resize
-    if (!is.null(resize))  magick::image_read(imgPath) %>%
+    if (!is.null(resize)) magick::image_read(imgPath) %>%
         magick::image_scale(resize) %>%
         magick::image_write(path = imgPath, format = "png")
 
     # Preview image
     if (preview) invisible(capture.output(print(magick::image_read(imgPath))))
 
-    return(imgPath)
+    invisible(capture.output(imgPath))
 }
 
 
