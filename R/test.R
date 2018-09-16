@@ -18,5 +18,5 @@ RC[, genCI(response    = responses,
            stim        = stimuli,
            noiseMatrix = N,
            baseImg     = "data/base.jpeg",
-           filename    = paste0(id, ".png") %>% unique), id]
+           outputPath  = paste0("cis/", id, ".png") %>% unique), id]
 

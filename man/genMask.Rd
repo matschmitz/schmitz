@@ -7,7 +7,7 @@
 genMask(response, stim, noiseMatrix, baseImg, scaling = "matched")
 }
 \arguments{
-\item{response}{Numerical vector with the reponses.}
+\item{response}{Numerical vector specifying the reponses.}
 
 \item{stim}{Numerical vector specifying the stimuli number.}
 
@@ -22,7 +22,8 @@ If a scalar is provided (e.g. 5) than the `"constant"` method will be applied.
 If `NULL` no scaling is applied.}
 }
 \value{
-(Un)scaled Noise mask (mask).
+List with the (un)scaled Noise mask (\code{$mask}) and the base image as a vector
+  (\code{$baseImgVect}).
 }
 \description{
 Generate (and scale) mask from responses.

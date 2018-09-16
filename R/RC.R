@@ -52,7 +52,7 @@ readBaseImg <- function(baseImgPath, maxContrast = TRUE) {
 
 #' @title Generate (and scale) mask from responses
 #' @description Generate (and scale) mask from responses.
-#' @param response Numerical vector with the reponses.
+#' @param response Numerical vector specifying the reponses.
 #' @param stim Numerical vector specifying the stimuli number.
 #' @param noiseMatrix Matrix of noise pattern as generated with
 #'   \code{\link[rcicr]{noiseMatrix <- generateStimuli2IFC(..., return_as_dataframe = TRUE)}}.
@@ -61,7 +61,8 @@ readBaseImg <- function(baseImgPath, maxContrast = TRUE) {
 #' @param scaling String|Scalar|NULL specifying the scaling method. `"matched"` is the default method.
 #'   If a scalar is provided (e.g. 5) than the `"constant"` method will be applied.
 #'   If `NULL` no scaling is applied.
-#' @return (Un)scaled Noise mask (mask).
+#' @return List with the (un)scaled Noise mask (\code{$mask}) and the base image as a vector
+#'   (\code{$baseImgVect}).
 #' @examples NULL
 #' @export genMask
 genMask <- function(response, stim, noiseMatrix, baseImg, scaling = "matched") {
@@ -83,52 +84,30 @@ genMask <- function(response, stim, noiseMatrix, baseImg, scaling = "matched") {
         scaledMask <- mask
     }
 
-    return(scaledMask)
+    return(list(mask = scaledMask, baseImgVect = baseImg))
 }
 
 #' @title Generate Classification Image (CI)
 #' @description Generate the combinaed of the noise mask (mask) and the base image.
 #' @inheritParams genMask
-#' @param mask Mask as generated from \code{\link{genMask}}. If `NULL` (default), then the `mask`
-#'   will be generated automatically by calling \code{\link{genMask}}. See `...`.
-#' @param filename String specifying the name of the ouput CI. Default is `"combined.png"`.
-#' @param outpath String specifying the output target path.
-#' @param resize Scalar specifying if the image should be resized.
-#' @param preview Logical indicating if the image should be previewed in the Viewer Panel.
-#' @param ... List of parameters passed to \code{\link{genMask}}. If `mask` is provided, then ellipsis
-#'   will be ignored.
+#' @param outputPath String specifying the file path of the ouput CI. Default is `"combined.png"`.
 #' @return NULL
 #' @examples NULL
 #' @export genCI
-genCI <- function(mask = NULL, filename = "combined.png", outpath = "./cis/",
-                  resize = NULL, preview = FALSE, ...) {
-
-    # Retrieve arguments passed
-    dots <- list(...)
-
-    # Read base image
-    if (is.character(dots$baseImg)) dots$baseImg <- readBaseImg(dots$baseImg)
-
+genCI <- function(response, stim, noiseMatrix, baseImg, scaling = "matched",
+                  outputPath = "combined.png") {
     # Generate mask
-    if (is.null(mask)) mask <- genMask(...)
+    M <- genMask(response, stim, noiseMatrix, baseImg, scaling)
+    mask <- M$mask
+    baseImgVect <- M$baseImgVect
 
     # Write and save combined image
-    baseImg <- dots$baseImg
-    combined <- (baseImg + mask) / 2
+    combined <- (baseImgVect + mask) / 2
     combined <- matrix(combined, nrow = 512)
-    if (!dir.exists(outpath)) dir.create(outpath)
-    imgPath <- file.path(outpath, filename)
-    png::writePNG(combined, imgPath)
+    png::writePNG(combined, outputPath)
 
-    # Resize
-    if (!is.null(resize)) magick::image_read(imgPath) %>%
-        magick::image_scale(resize) %>%
-        magick::image_write(path = imgPath, format = "png")
-
-    # Preview image
-    if (preview) invisible(capture.output(print(magick::image_read(imgPath))))
-
-    invisible(capture.output(imgPath))
+    # Return file path
+    invisible(outputPath)
 }
 
 

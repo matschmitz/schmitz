@@ -4,23 +4,25 @@
 \alias{genCI}
 \title{Generate Classification Image (CI)}
 \usage{
-genCI(mask = NULL, filename = "combined.png", outpath = "./cis/",
-  resize = NULL, preview = FALSE, ...)
+genCI(response, stim, noiseMatrix, baseImg, scaling = "matched",
+  outputPath = "combined.png")
 }
 \arguments{
-\item{mask}{Mask as generated from \code{\link{genMask}}. If `NULL` (default), then the `mask`
-will be generated automatically by calling \code{\link{genMask}}. See `...`.}
+\item{response}{Numerical vector specifying the reponses.}
 
-\item{filename}{String specifying the name of the ouput CI. Default is `"combined.png"`.}
+\item{stim}{Numerical vector specifying the stimuli number.}
 
-\item{outpath}{String specifying the output target path.}
+\item{noiseMatrix}{Matrix of noise pattern as generated with
+\code{\link[rcicr]{noiseMatrix <- generateStimuli2IFC(..., return_as_dataframe = TRUE)}}.}
 
-\item{resize}{Scalar specifying if the image should be resized.}
+\item{baseImg}{Numerical vector containing the baseImg image or string pointing to the baseImg
+image file. If baseImg is a string, then the baseImg image must in .png or .jpeg.}
 
-\item{preview}{Logical indicating if the image should be previewed in the Viewer Panel.}
+\item{scaling}{String|Scalar|NULL specifying the scaling method. `"matched"` is the default method.
+If a scalar is provided (e.g. 5) than the `"constant"` method will be applied.
+If `NULL` no scaling is applied.}
 
-\item{...}{List of parameters passed to \code{\link{genMask}}. If `mask` is provided, then ellipsis
-will be ignored.}
+\item{outputPath}{String specifying the file path of the ouput CI. Default is `"combined.png"`.}
 }
 \description{
 Generate the combinaed of the noise mask (mask) and the base image.
