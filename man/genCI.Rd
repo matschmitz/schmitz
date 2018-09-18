@@ -13,7 +13,7 @@ genCI(response, stim, noiseMatrix, baseImg, scaling = "matched",
 \item{stim}{Numerical vector specifying the stimuli number.}
 
 \item{noiseMatrix}{Matrix of noise pattern as generated with
-\code{\link[rcicr]{noiseMatrix <- generateStimuli2IFC(..., return_as_dataframe = TRUE)}}.}
+\code{noiseMatrix <- rcirc::generateStimuli2IFC(..., return_as_dataframe = TRUE)}.}
 
 \item{baseImg}{Numerical vector containing the baseImg image or string pointing to the baseImg
 image file. If baseImg is a string, then the baseImg image must in .png or .jpeg.}
