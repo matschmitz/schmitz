@@ -26,8 +26,11 @@ loj <- function(X = NULL, Y = NULL, onCol = NULL) {
 #' @export numerify
 numerify <- function(X) {
     tryNumeric <- function(y) {
-        if (!is.logical(y)) tryCatch(expr = {as.numeric(y)}, warning = function(w) y) else y
+        if (!is.logical(y) | !is.factor(y)) {
+            tryCatch(expr = {as.numeric(y)}, warning = function(w) y) else y
+        }
     }
+    +
     X[, (names(X)) := lapply(.SD, tryNumeric)]
 }
 
