@@ -27,7 +27,9 @@ loj <- function(X = NULL, Y = NULL, onCol = NULL) {
 numerify <- function(X) {
     tryNumeric <- function(y) {
         if (!is.logical(y) | !is.factor(y)) {
-            tryCatch(expr = {as.numeric(y)}, warning = function(w) y) else y
+            tryCatch(expr = {as.numeric(y)}, warning = function(w) y)
+        } else {
+            y
         }
     }
     +
