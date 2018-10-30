@@ -32,7 +32,6 @@ numerify <- function(X) {
             y
         }
     }
-    +
     X[, (names(X)) := lapply(.SD, tryNumeric)]
 }
 
