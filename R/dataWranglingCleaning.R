@@ -40,13 +40,14 @@ numerify <- function(X) {
 #'   rmarkdown reports.
 #' @param X data.table
 #' @param digits integer
+#' @param printOut logical that indicates if the output needs to be printed
 #' @return NULL
 #' @examples NULL
 #' @export roundify
-roundify <- function(X, digits = 2) {
+roundify <- function(X, digits = 2, printOut = TRUE) {
     .cols <- names(which(sapply(X, is.numeric)))
     X[, (.cols) := lapply(.SD, round, digits = digits), .SDcols = .cols]
-    print(X)
+    if(printOut) print(X) else X
 }
 
 #' @title Extract number from string

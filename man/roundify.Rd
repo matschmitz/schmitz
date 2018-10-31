@@ -4,12 +4,14 @@
 \alias{roundify}
 \title{Roundify}
 \usage{
-roundify(X, digits = 2)
+roundify(X, digits = 2, printOut = TRUE)
 }
 \arguments{
 \item{X}{data.table}
 
 \item{digits}{integer}
+
+\item{printOut}{logical that indicates if the output needs to be printed}
 }
 \description{
 Try to round each numerical column of a data.table and the prints it. Usefull with
