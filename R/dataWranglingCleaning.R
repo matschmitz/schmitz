@@ -44,11 +44,11 @@ numerify <- function(X) {
 #' @return NULL
 #' @examples NULL
 #' @export roundify
-roundify <- function(X, digits = 2, printOut = TRUE) {
+roundify <- function(X, digits = 2) {
+    Y <- X
     .cols <- names(which(sapply(X, is.numeric)))
-    X[, (.cols) := lapply(.SD, round, digits = digits), .SDcols = .cols]
-    if(printOut) print(X)
-    return(X)
+    Y[, (.cols) := lapply(.SD, round, digits = digits), .SDcols = .cols]
+    print(X)
 }
 
 #' @title Extract number from string
