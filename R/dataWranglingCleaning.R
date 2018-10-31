@@ -45,10 +45,10 @@ numerify <- function(X) {
 #' @examples NULL
 #' @export roundify
 roundify <- function(X, digits = 2) {
-    Y <- X
+    Y <- copy(X) # avoids the original X being modified
     .cols <- names(which(sapply(X, is.numeric)))
     Y[, (.cols) := lapply(.SD, round, digits = digits), .SDcols = .cols]
-    print(X)
+    print(Y)
 }
 
 #' @title Extract number from string
