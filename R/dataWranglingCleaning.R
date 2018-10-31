@@ -47,7 +47,8 @@ numerify <- function(X) {
 roundify <- function(X, digits = 2, printOut = TRUE) {
     .cols <- names(which(sapply(X, is.numeric)))
     X[, (.cols) := lapply(.SD, round, digits = digits), .SDcols = .cols]
-    if(printOut) print(X) else X
+    if(printOut) print(X)
+    return(X)
 }
 
 #' @title Extract number from string

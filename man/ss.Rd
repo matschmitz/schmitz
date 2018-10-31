@@ -4,12 +4,14 @@
 \alias{ss}
 \title{Effect sizes for lm summary}
 \usage{
-ss(mdl, digits = 3)
+ss(mdl, digits = 3, printOut = TRUE)
 }
 \arguments{
 \item{mdl}{an lm model obtained from lm}
 
 \item{digits}{number of decimal digits}
+
+\item{printOut}{prints the output}
 }
 \value{
 data table with summary statistics
