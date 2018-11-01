@@ -23,13 +23,23 @@ m_sd <- function(x, ...) sprintf("%.2f(%.2f)", mean(x, ...), sd(x, ...))
 ss <- function(mdl, digits = 3, printOut = TRUE) {
     mdl.coefficients <- summary(mdl)$coefficients
     mdl.effects <- lmSupport::modelEffectSizes(mdl, Print = FALSE)$Effects[, 2:3]
-    mdl.s <- cbind(mdl.coefficients, mdl.effects)
+    if(is.matrix(mdl.effects)) {
+        mdl.s <- cbind(mdl.coefficients, mdl.effects)
+    } else {
+        mdl.s <- cbind(mdl.coefficients %>% as.matrix, mdl.effects %>% as.matrix() %>% t)
+    }
     coef.names <- row.names(mdl.s)
     mdl.s <- data.table(mdl.s)
     mdl.s[, ` ` := coef.names]
     mdl.s[, `F value` := `t value`**2]
+    mdl.s[`Pr(>|t|)` >= .1,    `  ` := " "  ]
+    mdl.s[`Pr(>|t|)` <  .1,    `  ` := "."  ]
+    mdl.s[`Pr(>|t|)` <  .05,   `  ` := "*"  ]
+    mdl.s[`Pr(>|t|)` <  .01,   `  ` := "**" ]
+    mdl.s[`Pr(>|t|)` <  .001,  `  ` := "***"]
+
     setcolorder(mdl.s, c(" ", "Estimate", "Std. Error", "df", "t value",
-                         "F value", "Pr(>|t|)", "pEta-sqr"))
+                         "F value", "Pr(>|t|)", "pEta-sqr", "  "))
     if(printOut) {
         as.character(mdl$call)[2] %>% cat(., "\n")
         schmitz::roundify(mdl.s, digits)
