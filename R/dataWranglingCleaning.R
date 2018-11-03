@@ -46,7 +46,8 @@ numerify <- function(X) {
 #' @export roundify
 roundify <- function(X, digits = 2) {
     Y <- copy(X) # avoids the original X being modified
-    .cols <- names(which(sapply(X, is.numeric)))
+    Y <- data.table(Y) # ensures Y is a data.table
+    .cols <- names(which(sapply(Y, is.numeric)))
     Y[, (.cols) := lapply(.SD, round, digits = digits), .SDcols = .cols]
     print(Y)
 }
