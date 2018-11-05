@@ -49,7 +49,7 @@ roundify <- function(X, digits = 2) {
     Y <- data.table(Y) # ensures Y is a data.table
     .cols <- names(which(sapply(Y, is.numeric)))
     Y[, (.cols) := lapply(.SD, round, digits = digits), .SDcols = .cols]
-    print(Y)
+    Y
 }
 
 #' @title Extract number from string
