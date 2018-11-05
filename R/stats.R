@@ -20,7 +20,7 @@ m_sd <- function(x, ...) sprintf("%.2f(%.2f)", mean(x, ...), sd(x, ...))
 #' @return data table with summary statistics
 #' @examples ss(mdl)
 #' @export ss
-ss <- function(mdl, digits = 3, printOut = TRUE) {
+ss <- function(mdl, digits = 3) {
     mdl.coefficients <- summary(mdl)$coefficients
     mdl.effects <- lmSupport::modelEffectSizes(mdl, Print = FALSE)$Effects[, 2:3]
     if(is.matrix(mdl.effects)) {
@@ -40,9 +40,7 @@ ss <- function(mdl, digits = 3, printOut = TRUE) {
 
     setcolorder(mdl.s, c(" ", "Estimate", "Std. Error", "df", "t value",
                          "F value", "Pr(>|t|)", "pEta-sqr", "  "))
-    if(printOut) {
-        as.character(mdl$call)[2] %>% cat(., "\n")
-        schmitz::roundify(mdl.s, digits)
-    }
-    return(invisible(mdl.s))
+
+    as.character(mdl$call)[2] %>% cat(., "\n")
+    print(schmitz::roundify(mdl.s, digits))
 }
