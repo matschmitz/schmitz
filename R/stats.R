@@ -21,12 +21,17 @@ m_sd <- function(x, ...) sprintf("%.2f(%.2f)", mean(x, ...), sd(x, ...))
 #' @examples ss(mdl)
 #' @export ss
 ss <- function(mdl, digits = 3) {
+    mdl.type <- ifelse(is.null(names(mdl)), "lmer", "lm")
     mdl.coefficients <- summary(mdl)$coefficients
-    mdl.effects <- lmSupport::modelEffectSizes(mdl, Print = FALSE)$Effects[, 2:3]
-    if(is.matrix(mdl.effects)) {
-        mdl.s <- cbind(mdl.coefficients, mdl.effects)
-    } else {
-        mdl.s <- cbind(mdl.coefficients %>% as.matrix, mdl.effects %>% as.matrix() %>% t)
+    if (mdl.type == "lm") {
+        mdl.effects <- lmSupport::modelEffectSizes(mdl, Print = FALSE)$Effects[, 2:3]
+        if(is.matrix(mdl.effects)) {
+            mdl.s <- cbind(mdl.coefficients, mdl.effects)
+        } else {
+            mdl.s <- cbind(mdl.coefficients %>% as.matrix, mdl.effects %>% as.matrix() %>% t)
+        }
+    } else { # lmer
+        mdl.s <- mdl.coefficients
     }
     coef.names <- row.names(mdl.s)
     mdl.s <- data.table(mdl.s)
@@ -38,9 +43,17 @@ ss <- function(mdl, digits = 3) {
     mdl.s[`Pr(>|t|)` <  .01,   `  ` := "**" ]
     mdl.s[`Pr(>|t|)` <  .001,  `  ` := "***"]
 
-    setcolorder(mdl.s, c(" ", "Estimate", "Std. Error", "df", "t value",
-                         "F value", "Pr(>|t|)", "pEta-sqr", "  "))
+    if (mdl.type == "lm") {
+        mdl.s <- mdl.s[, .(` `, `Estimate`, `Std. Error`, `df`, `t value`,
+                           `F value`, `Pr(>|t|)`, `pEta-sqr`, `  `)]
 
-    as.character(mdl$call)[2] %>% cat(., "\n")
-    print(schmitz::roundify(mdl.s, digits))
+        as.character(mdl$call)[2] %>% cat("\n")
+    } else { # lmer
+        mdl.s <- mdl.s[, .(` `, `Estimate`, `Std. Error`, `df`, `t value`,
+                           `F value`, `Pr(>|t|)`, `  `)]
+
+        as.character(mdl@call)[2] %>% cat("\n")
+    }
+
+    print(schmitz::roundify(mdl.s, digits = 3))
 }
