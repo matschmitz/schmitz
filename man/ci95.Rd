@@ -2,7 +2,7 @@
 % Please edit documentation in R/stats.R
 \name{ci95}
 \alias{ci95}
-\title{95% confidence interval}
+\title{95 percent confidence interval}
 \usage{
 ci95(x)
 }
@@ -10,10 +10,11 @@ ci95(x)
 \item{x}{a numerical vector}
 }
 \value{
-vector of length 2: the first value is the low 95%CI and the second the high 95%ci
+vector of length 2: the first value is the low 95 percent confidence interval
+ and the second the high 95 percent confidence interval
 }
 \description{
-Compute the 95% confidence interval of the mean
+Compute the 95 percent confidence interval of the mean
 }
 \examples{
 ci95(1:10)

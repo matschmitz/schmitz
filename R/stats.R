@@ -64,10 +64,11 @@ ss <- function(mdl, digits = 3) {
 #' @export sem
 sem <- function(x) sd(x)/sqrt(length(x))
 
-#' @title 95% confidence interval
-#' @description Compute the 95% confidence interval of the mean
+#' @title 95 percent confidence interval
+#' @description Compute the 95 percent confidence interval of the mean
 #' @param x a numerical vector
-#' @return vector of length 2: the first value is the low 95%CI and the second the high 95%ci
+#' @return vector of length 2: the first value is the low 95 percent confidence interval
+#'  and the second the high 95 percent confidence interval
 #' @examples ci95(1:10)
 #' @export ci95
 ci95 <- function(x) c(mean(x) - 1.96 * sem(x), mean(x) + 1.96 * sem(x))
