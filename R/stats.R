@@ -70,7 +70,7 @@ sem <- function(x) sd(x)/sqrt(length(x))
 #' @title 95% confidence interval
 #'
 #' @description Compute the 95% confidence interval of the mean
-#' @inheritParams genMask
+#' @param x a numerical vector
 #' @return vector of length 2 with the first value being the low 95%CI and the second value the high 95%ci
 #' @examples ci95(1:10)
 #' @export ci95
@@ -79,7 +79,7 @@ ci95 <- function(x) c(mean(x) - 1.96 * sem(x), mean(x) + 1.96 * sem(x))
 #' @title 95% low confidence interval
 #'
 #' @description Compute the 95% low confidence interval of the mean
-#' @inheritParams genMask
+#' @inheritParams sem
 #' @return scalar with low 95%CI
 #' @examples ci95l(1:10)
 #' @export ci95l
@@ -88,7 +88,7 @@ ci95l <- function(x) ci95(x)[1]
 #' @title 95% high confidence interval
 #'
 #' @description Compute the 95% high confidence interval of the mean
-#' @param x a numerical vector
+#' @inheritParams sem
 #' @return scalar with high 95%CI
 #' @examples ci95h(1:10)
 #' @export ci95h

@@ -6,6 +6,9 @@
 \usage{
 ci95(x)
 }
+\arguments{
+\item{x}{a numerical vector}
+}
 \value{
 vector of length 2 with the first value being the low 95%CI and the second value the high 95%ci
 }

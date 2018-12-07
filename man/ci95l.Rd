@@ -6,6 +6,9 @@
 \usage{
 ci95l(x)
 }
+\arguments{
+\item{x}{a numerical vector}
+}
 \value{
 scalar with low 95%CI
 }
