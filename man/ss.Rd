@@ -4,7 +4,7 @@
 \alias{ss}
 \title{Effect sizes for lm summary}
 \usage{
-ss(mdl, digits = 3, printOut = TRUE)
+ss(mdl, digits = 3)
 }
 \arguments{
 \item{mdl}{an lm model obtained from lm}

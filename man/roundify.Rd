@@ -4,7 +4,7 @@
 \alias{roundify}
 \title{Roundify}
 \usage{
-roundify(X, digits = 2, printOut = TRUE)
+roundify(X, digits = 2)
 }
 \arguments{
 \item{X}{data.table}
