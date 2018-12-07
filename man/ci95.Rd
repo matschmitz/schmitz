@@ -10,7 +10,7 @@ ci95(x)
 \item{x}{a numerical vector}
 }
 \value{
-vector of length 2 with the first value being the low 95%CI and the second value the high 95%ci
+vector of length 2: the first value is the low 95%CI and the second the high 95%ci
 }
 \description{
 Compute the 95% confidence interval of the mean

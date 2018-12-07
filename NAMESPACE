@@ -2,8 +2,6 @@
 
 export("%ni%")
 export(ci95)
-export(ci95h)
-export(ci95l)
 export(extractNumber)
 export(genCI)
 export(genMask)
