@@ -18,7 +18,7 @@
 #' @param depth see \code{magick::image_read()}
 #' @param strip see \code{magick::image_read()}
 #' @examples NULL
-#' @export
+#' @export image_read
 image_read <- function(img, density = NULL, depth = NULL, strip = FALSE, alpha = 1) {
     # If img is a path, try to read the image
     if (is.character(img)) {
