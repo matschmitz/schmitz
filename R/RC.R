@@ -7,7 +7,7 @@
 
 # FUNCTIONS ----------------------------------------------------------------------------------------
 
-#' @title Generalized version of image_read()
+#' @title Matrix to image
 #' @description Generalized version of \code{magick::image_read()} which also
 #'  allows to read numerical objects.
 #' @param img Image (e.g., image path) to be read, or numerical object (e.g., matrix, array)
@@ -18,8 +18,8 @@
 #' @param depth see \code{magick::image_read()}
 #' @param strip see \code{magick::image_read()}
 #' @examples NULL
-#' @export image_read
-image_read <- function(img, density = NULL, depth = NULL, strip = FALSE, alpha = 1) {
+#' @export mat2img
+mat2img <- function(img, density = NULL, depth = NULL, strip = FALSE, alpha = 1) {
     # If img is a path, try to read the image
     if (is.character(img)) {
         if (grepl('png|PNG', img)) {

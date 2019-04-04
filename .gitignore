@@ -1,5 +1,9 @@
 cis/
 R/test.R
 .Rproj.user
+.Rproj.user/
+.Rproj.user/**
 .Rhistory
 .Ruserdata
+schmitz.Rproj
+.Rproj.user

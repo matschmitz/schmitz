@@ -1,3 +1,0 @@
-devtools::install_github('matschmitz/schmitz')
-library("schmitz", lib.loc="~/R/win-library/3.5")
-detach("package:schmitz", unload=TRUE)
