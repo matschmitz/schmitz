@@ -3,8 +3,47 @@
 #' @importFrom jpeg readJPEG
 #' @importFrom magick image_read
 #' @importFrom imager width height Xc Yc
+#' @importFrim magick image_read
 
 # FUNCTIONS ----------------------------------------------------------------------------------------
+
+#' @title Generalized version of image_read()
+#' @description Generalized version of \code{magick::image_read()} which also
+#'  allows to read numerical objects.
+#' @param img Image (e.g., image path) to be read, or numerical object (e.g., matrix, array)
+#' see \code{magick::image_read()} for more information (equivalent to `path` argument).
+#' @param alpha (optional) Scalar indicating the trasnparency of the (alpha). If the object already
+#' contains an alpha, than it will not be overwritten. Default is `1`.
+#' @param density see \code{magick::image_read()}
+#' @param depth see \code{magick::image_read()}
+#' @param strip see \code{magick::image_read()}
+#' @examples NULL
+#' @export
+image_read <- function(img, density = NULL, depth = NULL, strip = FALSE, alpha = 1) {
+    # If img is a path, try to read the image
+    if (is.character(img)) {
+        if (grepl('png|PNG', img)) {
+            img <- png::readPNG(img)
+        } else if (grepl('jpeg|JPEG|jpg|JPG', img)) {
+            img <- jpeg::readJPEG(img)
+        } else {
+            stop("Image format not supported")
+        }
+    }
+
+    imgDim <- dim(img)
+    alphaMatrix <- matrix(alpha, imgDim[1], imgDim[2])
+
+    # If img is a numerical object, transform it into an array which can be read by image_read()
+    if (length(imgDim) < 3) {
+        img <- simplify2array(list(img, img, img, alphaMatrix))
+    } else if (imgDim[3] == 3) {
+        img <- simplify2array(list(img, alphaMatrix))
+    }
+
+    magick::image_read(img, density = density, depth = depth, strip = strip)
+}
+
 #' @title Read and scale base image
 #' @description Read and scale the base image
 #' @param baseImgPath String specifying path to the base image.
@@ -15,8 +54,10 @@ readBaseImg <- function(baseImgPath, maxContrast = TRUE) {
     # Read image
     if (grepl('png|PNG', baseImgPath)) {
         baseImg <- png::readPNG(baseImgPath)
-    } else {
+    } else if (grepl('jpeg|JPEG|jpg|JPG', baseImgPath)) {
         baseImg <- jpeg::readJPEG(baseImgPath)
+    } else {
+        stop("Base image format not supported")
     }
 
     # Ensure there is only 2 dimensions
