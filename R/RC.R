@@ -1,12 +1,3 @@
-# LIBRARIES ----------------------------------------------------------------------------------------
-#' @importFrom png writePNG readPNG
-#' @importFrom jpeg readJPEG
-#' @importFrom magick image_read
-#' @importFrom imager width height Xc Yc
-#' @importFrim magick image_read
-
-# FUNCTIONS ----------------------------------------------------------------------------------------
-
 #' @title Matrix to image
 #' @description Generalized version of \code{magick::image_read()} which also
 #'  allows to read numerical objects.

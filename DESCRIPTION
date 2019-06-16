@@ -1,13 +1,22 @@
 Package: schmitz
 Type: Package
 Title: Schmitz Package
-Version: 0.1.2
-Author: Mathias Schmitz
+Version: 0.1.3
+Author: person("Mathias", "Schmitz")
 Maintainer: Mathias Schmitz <mathias.schmitz@uclouvain.be>
 Description: My first package, just some custom functions
 License: GLP-2
 Encoding: UTF-8
 LazyData: true
 Imports:
-    data.table, magrittr, png, jpeg, magick
+    data.table,
+    imager, 
+    jpeg,
+    lmSupport,
+    magick,
+    magrittr,
+    png,
+    stringr
 RoxygenNote: 6.1.1
+Suggests: 
+    testthat
