@@ -36,20 +36,78 @@ ss <- function(mdl, digits = 3) {
     mdl.s[`Pr(>|t|)` <  .05,   `  ` := "*"  ]
     mdl.s[`Pr(>|t|)` <  .01,   `  ` := "**" ]
     mdl.s[`Pr(>|t|)` <  .001,  `  ` := "***"]
-
+    
     if (mdl.type == "lm") {
         mdl.s <- mdl.s[, .(` `, `Estimate`, `Std. Error`, `df`, `t value`,
                            `F value`, `Pr(>|t|)`, `pEta-sqr`, `  `)]
-
+        
         as.character(mdl$call)[2] %>% cat("\n")
     } else { # lmer
         mdl.s <- mdl.s[, .(` `, `Estimate`, `Std. Error`, `df`, `t value`,
                            `F value`, `Pr(>|t|)`, `  `)]
-
+        
         as.character(mdl@call)[2] %>% cat("\n")
     }
-
+    
     print(schmitz::roundify(mdl.s, digits = 3))
+}
+
+#' @title Report Bayes factor
+#' @description Report the Bayes factor (BF10, BF01 and error)
+#' @param BFobj a `BFBayesFactor` object as returned from `lmBF(mdlH1)/lmBF(mdlH0)`. Warning, 
+#' the `BFobj` must be in favor of the alternative hypothesis (BF10)
+#' @param digits number of decimal digits
+#' @return String with the BF10, BF01 and error
+#' @export ssBF
+ssBF <- function(BFobj, digits = 2) {
+    # Temporary turn off warning
+    oldw <- getOption("warn")
+    options(warn = -1)
+    
+    # Extract factor(s) being tested
+    numerator <- as.character(names(BFobj@numerator))
+    numerator <- strsplit(numerator, " \\+ ")[[1]]
+    
+    denomiator <- BFobj@denominator@shortName
+    denomiator <- strsplit(denomiator, " \\+ ")[[1]]
+    
+    factorDiff <- setdiff(numerator, denomiator)
+    factorDiff <- paste(factorDiff, collapse = ", ")
+    
+    # Extract bayes factor and error
+    BF <- extractBF(BFobj)
+    BF10 <- BF$bf
+    BF01 <- 1/BF10
+    BFerr <- BF$error * 100
+    
+    if (BF10 > 1) {
+        interpretation <- dplyr::case_when(
+            data.table::between(BF10, 1, 3) ~ "anectdotal",
+            data.table::between(BF10, 3, 10) ~ "substantial",
+            data.table::between(BF10, 10, 30) ~ "strong",
+            data.table::between(BF10, 30, 150) ~ "very strong",
+            BF10 > 150 ~ "decisive"
+        )
+        interpretation <- paste(interpretation, "evidence in favor of H1")
+    } else {
+        interpretation <- dplyr::case_when(
+            data.table::between(BF01, 1, 3) ~ "anectdotal",
+            data.table::between(BF01, 3, 10) ~ "substantial",
+            data.table::between(BF01, 10, 30) ~ "strong",
+            data.table::between(BF01, 30, 150) ~ "very strong",
+            BF10 > 150 ~ "decisive"
+        )
+        interpretation <- paste(interpretation, "evidence in favor of H0")
+    }
+    
+    
+    return(
+        cat(factorDiff, " BF10: ", round(BF10, 2), " BF01: ", round(BF01, 2),
+            " ± ", round(BFerr, 2), "% ", interpretation, sep = "")
+    )
+    
+    # Reset warnings to current
+    options(warn = oldw)
 }
 
 #' @title Standard error of the mean

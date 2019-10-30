@@ -71,3 +71,15 @@ extractNumber <- function(x, convertToNum = TRUE) {
 #' @examples 1 %ni% (1:3)
 #' @export %ni%
 "%ni%" <- Negate("%in%")
+
+#' @title Supress output
+#' @description Completely silence the output from a function
+#' @param x a function with output
+#' @return The function output
+#' @example y <- quiet(cat(1)) # no output is printed
+#' @export quiet
+quiet <- function(x) { 
+    sink(tempfile()) 
+    on.exit(sink()) 
+    invisible(force(x)) 
+}
