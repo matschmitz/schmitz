@@ -16,5 +16,5 @@ formated string
 Format the mean and sd of a vector
 }
 \examples{
-m_sd(1:3)
+m_sd(rnorm(100))
 }
