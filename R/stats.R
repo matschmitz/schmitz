@@ -29,27 +29,39 @@ ss <- function(mdl, digits = 3) {
     }
     coef.names <- row.names(mdl.s)
     mdl.s <- data.table(mdl.s)
-    mdl.s[, ` ` := coef.names]
-    mdl.s[, `F value` := `t value`**2]
+    mdl.s[, coefs := coef.names]
+    mdl.s[, Fval := `t value`**2]
     mdl.s[`Pr(>|t|)` >= .1,    `  ` := " "  ]
     mdl.s[`Pr(>|t|)` <  .1,    `  ` := "."  ]
     mdl.s[`Pr(>|t|)` <  .05,   `  ` := "*"  ]
     mdl.s[`Pr(>|t|)` <  .01,   `  ` := "**" ]
     mdl.s[`Pr(>|t|)` <  .001,  `  ` := "***"]
     
+    # Bayes factor
+    
+    mdl.s[, BF10 := {
+        .coefs <- ifelse(coefs == "(Intercept)", 1, coefs)
+        mdl_null <- update(mdl, paste("~ . -", .coefs))
+        exp((BIC(mdl_null) - BIC(mdl))/2)
+    }, 1:nrow(mdl.s)]
+    
+    mdl.s[, BF01 := 1 / BF10]
+    
     if (mdl.type == "lm") {
-        mdl.s <- mdl.s[, .(` `, `Estimate`, `Std. Error`, `df`, `t value`,
-                           `F value`, `Pr(>|t|)`, `pEta-sqr`, `  `)]
-        
+        mdl.s <- mdl.s[, .(` ` = coefs, b = round(`Estimate`, 2), SE = round(`Std. Error`, 2), `df`,
+                           Fval = round(Fval, 2), p = round(`Pr(>|t|)`, 3), 
+                           BF10 = round(BF10, 2), BF01 = round(BF01, 2),
+                           peta2 = round(`pEta-sqr`, 3), `  `)]
         as.character(mdl$call)[2] %>% cat("\n")
     } else { # lmer
-        mdl.s <- mdl.s[, .(` `, `Estimate`, `Std. Error`, `df`, `t value`,
-                           `F value`, `Pr(>|t|)`, `  `)]
-        
+        mdl.s <- mdl.s[, .(` ` = coefs, b = round(`Estimate`, 2), SE = round(`Std. Error`, 2), `df`,
+                           Fval = round(Fval, 2),
+                           BF10 = round(BF10, 2), BF01 = round(BF01, 2),
+                           p = round(`Pr(>|t|)`, 3), `  `)]
         as.character(mdl@call)[2] %>% cat("\n")
     }
     
-    print(schmitz::roundify(mdl.s, digits = 3))
+    print(mdl.s)
 }
 
 #' @title Report Bayes factor
