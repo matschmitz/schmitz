@@ -50,13 +50,15 @@ ss <- function(mdl, digits = 3) {
     if (mdl.type == "lm") {
         mdl.s <- mdl.s[, .(` ` = coefs, b = round(`Estimate`, 2), SE = round(`Std. Error`, 2), `df`,
                            Fval = round(Fval, 2), p = round(`Pr(>|t|)`, 3), 
-                           BF10 = round(BF10, 2), BF01 = round(BF01, 2),
+                           BF10 = ifelse(BF10 > 10**5, ">1e5", round(BF10, 2)),
+                           BF01 = ifelse(BF01 > 10**5, ">1e5", round(BF01, 2)),
                            peta2 = round(`pEta-sqr`, 3), `  `)]
         as.character(mdl$call)[2] %>% cat("\n")
     } else { # lmer
         mdl.s <- mdl.s[, .(` ` = coefs, b = round(`Estimate`, 2), SE = round(`Std. Error`, 2), `df`,
                            Fval = round(Fval, 2),
-                           BF10 = round(BF10, 2), BF01 = round(BF01, 2),
+                           BF10 = ifelse(BF10 > 10**5, ">1e5", round(BF10, 2)),
+                           BF01 = ifelse(BF01 > 10**5, ">1e5", round(BF01, 2)),
                            p = round(`Pr(>|t|)`, 3), `  `)]
         as.character(mdl@call)[2] %>% cat("\n")
     }
