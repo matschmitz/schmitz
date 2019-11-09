@@ -14,7 +14,7 @@ m_sd <- function(x, ...) sprintf("%.2f(%.2f)", mean(x, ...), sd(x, ...))
 #' @return data table with summary statistics
 #' @examples ss(mdl)
 #' @export ss
-ss <- function(mdl, digits = 3) {
+ss <- function(mdl) {
     mdl.type <- ifelse(is.null(names(mdl)), "lmer", "lm")
     mdl.coefficients <- summary(mdl)$coefficients
     if (mdl.type == "lm") {
@@ -49,18 +49,17 @@ ss <- function(mdl, digits = 3) {
     
     if (mdl.type == "lm") {
         mdl.s <- mdl.s[, .(` ` = coefs, b = round(`Estimate`, 2), SE = round(`Std. Error`, 2),
-                           df = round(df, 2),
-                           Fval = round(Fval, 2), p = round(`Pr(>|t|)`, 3), 
-                           BF10 = ifelse(BF10 > 1e5, ">1e5", round(BF10, 3)),
-                           BF01 = ifelse(BF01 > 1e5, ">1e5", round(BF01, 3)),
-                           peta2 = round(`pEta-sqr`, 3), `  `)]
+                           df = round(df, 2), Fval = round(Fval, 2),
+                           BF10 = ifelse(BF10 > 1e5, ">1e5", round(BF10, 2)),
+                           BF01 = ifelse(BF01 > 1e5, ">1e5", round(BF01, 2)),
+                           peta2 = round(`pEta-sqr`, 3),
+                           p = round(`Pr(>|t|)`, 3), `  `)]
         as.character(mdl$call)[2] %>% cat("\n")
     } else { # lmer
         mdl.s <- mdl.s[, .(` ` = coefs, b = round(`Estimate`, 2), SE = round(`Std. Error`, 2),
-                           df = round(df, 2),
-                           Fval = round(Fval, 2),
-                           BF10 = ifelse(BF10 > 1e5, ">1e5", round(BF10, 3)),
-                           BF01 = ifelse(BF01 > 1e5, ">1e5", round(BF01, 3)),
+                           df = round(df, 2), Fval = round(Fval, 2),
+                           BF10 = ifelse(BF10 > 1e5, ">1e5", round(BF10, 2)),
+                           BF01 = ifelse(BF01 > 1e5, ">1e5", round(BF01, 2)),
                            p = round(`Pr(>|t|)`, 3), `  `)]
         as.character(mdl@call)[2] %>% cat("\n")
     }
