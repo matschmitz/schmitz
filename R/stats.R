@@ -84,7 +84,11 @@ ssBF <- function(mdl) {
                                    BF01 < .001 ~ "<.001",
                                    TRUE ~ as.character(round(BF01, 2)))]
   
-  mdl.s <- mdl.s[, .(` `, b, SE, df, Fval, peta2, BF10, BF01, p, `  `)]
+  if (mdl.type == "lm") {
+    mdl.s <- mdl.s[, .(` `, b, SE, df, Fval, peta2, BF10, BF01, p, `  `)]
+  } else {
+    mdl.s <- mdl.s[, .(` `, b, SE, df, Fval, BF10, BF01, p, `  `)]
+  }
   
   print(mdl.s)
 }
