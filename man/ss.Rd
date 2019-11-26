@@ -2,22 +2,18 @@
 % Please edit documentation in R/stats.R
 \name{ss}
 \alias{ss}
-\title{Effect sizes for lm summary}
+\title{LMM and LM results summary}
 \usage{
-ss(mdl, digits = 3)
+ss(mdl)
 }
 \arguments{
 \item{mdl}{an lm model obtained from lm}
-
-\item{digits}{number of decimal digits}
-
-\item{printOut}{prints the output}
 }
 \value{
 data table with summary statistics
 }
 \description{
-Add effect sizes to the lm summary
+Formats the results from LMM and LM. Provides effect sizes.
 }
 \examples{
 ss(mdl)

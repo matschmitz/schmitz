@@ -2,19 +2,19 @@
 % Please edit documentation in R/stats.R
 \name{ssBF}
 \alias{ssBF}
-\title{Report Bayes factor}
+\title{LMM and LM results summary with Bayes factor}
 \usage{
-ssBF(BFobj, digits = 2)
+ssBF(mdl)
 }
 \arguments{
-\item{BFobj}{a `BFBayesFactor` object as returned from `lmBF(mdlH1)/lmBF(mdlH0)`. Warning, 
-the `BFobj` must be in favor of the alternative hypothesis (BF10)}
-
-\item{digits}{number of decimal digits}
+\item{mdl}{an lm model obtained from lm}
 }
 \value{
-String with the BF10, BF01 and error
+data table with summary statistics
 }
 \description{
-Report the Bayes factor (BF10, BF01 and error)
+Formats the results from LMM and LM. Provides effect sizes and Bayes factor.
+}
+\examples{
+ssb(mdl)
 }
