@@ -56,7 +56,7 @@ ss <- function(mdl) {
     )]
     as.character(mdl@call)[2] %>% cat("\n")
   }
-  mdl.s
+  print(mdl.s)
 }
 
 
