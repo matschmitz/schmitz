@@ -157,7 +157,7 @@ apacorr <- function(X, vars = NULL, digits = 2, kableFormat = TRUE) {
   if(kableFormat) {
     kableExtra::kable(C) %>% 
       kableExtra::kable_styling() %>% 
-      kableExtra::footnote(general = "*p<.05, **p<.01, ***p<.001",
+      kableExtra::footnote(general = "\\**p*<.05, \\*\\**p*<.01, \\*\\*\\**p*<.001",
                            footnote_as_chunk = T)
   } else {
     return(C)
