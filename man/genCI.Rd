@@ -4,8 +4,14 @@
 \alias{genCI}
 \title{Generate Classification Image (CI)}
 \usage{
-genCI(response, stim, noiseMatrix, baseImg, scaling = "matched",
-  outputPath = "combined.png")
+genCI(
+  response,
+  stim,
+  noiseMatrix,
+  baseImg,
+  scaling = "matched",
+  outputPath = "combined.png"
+)
 }
 \arguments{
 \item{response}{Numerical vector specifying the reponses.}

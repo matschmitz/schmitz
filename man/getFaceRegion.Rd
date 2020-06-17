@@ -4,8 +4,15 @@
 \alias{getFaceRegion}
 \title{Get face region}
 \usage{
-getFaceRegion(imgPath, xpos = 0, ypos = 0, faceWidth = 1.4,
-  faceHeight = 1.8, preview = TRUE, writeImgTo = NULL)
+getFaceRegion(
+  imgPath,
+  xpos = 0,
+  ypos = 0,
+  faceWidth = 1.4,
+  faceHeight = 1.8,
+  preview = TRUE,
+  writeImgTo = NULL
+)
 }
 \arguments{
 \item{imgPath}{String specifying path to the base image.}

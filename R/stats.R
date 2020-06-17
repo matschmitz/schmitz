@@ -112,3 +112,49 @@ sem <- function(x) sd(x) / sqrt(length(x))
 #' ci95(1:10)
 #' @export ci95
 ci95 <- function(x) c(mean(x) - 1.96 * sem(x), mean(x) + 1.96 * sem(x))
+
+#' @title Correlation Matrix APA
+#' @description Correlation matrix in APA format (HTML)
+#' @param X a matrix, data.frame, or data table
+#' @param vars (optional; Default = `NULL`) Character vector on which compute the function.
+#' @param digits (optional; Default = 2) 
+#' @return Correlation matrix in APA format (HTML)
+#' @examples
+#' apacorr(mtcars)
+#' @export apacorr
+apacorr <- function(X, vars = NULL, digits = 2) {
+  X <- data.table::data.table(X)
+  if(!is.null(vars)) X <- X[, .SD, .SDcols = vars]
+  
+  corrRes <- Hmisc::rcorr(as.matrix(X))
+  
+  C <- corrRes$r
+  P <- corrRes$P
+  vars <- rownames(C)
+  
+  C <- weights::rd(C, digits = 2)
+  
+  P[is.na(P)] <- 99
+  
+  C[as.vector(P < .001)]             <- paste0(C[as.vector(P < .001)], "***")
+  C[as.vector(P < .01 & P >= .001)]  <- paste0(C[as.vector(P < .01 & P >= .001)], "** ")
+  C[as.vector(P < .05 & P >= .01)]   <- paste0(C[as.vector(P < .05 & P >= .01)], "*  ")
+  C[as.vector(P >= .05)]             <- paste0(C[as.vector(P >= .05)], "   ")
+  
+  diag(C) <- "—   "
+  gdata::upperTriangle(C) <- ""
+  
+  C <- data.table::data.table(C)
+  data.table::setnames(C, names(C), as.character(1:ncol(C)))
+  
+  C[, Variable := paste0(1:length(vars), ". ", vars)]
+  C[, M := round(colMeans(X), 2) %>% format(nsmall = 2)]
+  C[, SD := round(apply(X, 2, sd), 2) %>% format(nsmall = 2)]
+  
+  data.table::setcolorder(C, c("Variable", "M", "SD"))
+  
+  kableExtra::kable(C) %>% 
+    kableExtra::kable_styling() %>% 
+    kableExtra::footnote(general = "*p<.05, **p<.01, ***p<.001",
+                         footnote_as_chunk = T)
+}

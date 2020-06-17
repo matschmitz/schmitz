@@ -4,8 +4,7 @@
 \alias{mat2img}
 \title{Matrix to image}
 \usage{
-mat2img(img, density = NULL, depth = NULL, strip = FALSE,
-  alpha = 1)
+mat2img(img, density = NULL, depth = NULL, strip = FALSE, alpha = 1)
 }
 \arguments{
 \item{img}{Image (e.g., image path) to be read, or numerical object (e.g., matrix, array)

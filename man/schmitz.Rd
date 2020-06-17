@@ -3,7 +3,6 @@
 \docType{package}
 \name{schmitz}
 \alias{schmitz}
-\alias{schmitz-package}
 \title{schmitz: My first package, just some custom functions.}
 \description{
 The \code{schmitz} package provides three categories of functions:
