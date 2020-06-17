@@ -4,7 +4,7 @@
 \alias{apacorr}
 \title{Correlation Matrix APA}
 \usage{
-apacorr(X, vars = NULL, digits = 2)
+apacorr(X, vars = NULL, digits = 2, kableFormat = TRUE)
 }
 \arguments{
 \item{X}{a matrix, data.frame, or data table}
@@ -12,12 +12,14 @@ apacorr(X, vars = NULL, digits = 2)
 \item{vars}{(optional; Default = `NULL`) Character vector on which compute the function.}
 
 \item{digits}{(optional; Default = 2)}
+
+\item{kableFormat}{(optional; Default = `TRUE`) Should the table be formated with kableExtra}
 }
 \value{
-Correlation matrix in APA format (HTML)
+Correlation matrix in APA format (in HTML if `kableExtra = TRUE`).
 }
 \description{
-Correlation matrix in APA format (HTML)
+Correlation matrix in APA format
 }
 \examples{
 apacorr(mtcars)

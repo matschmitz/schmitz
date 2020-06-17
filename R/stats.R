@@ -114,15 +114,16 @@ sem <- function(x) sd(x) / sqrt(length(x))
 ci95 <- function(x) c(mean(x) - 1.96 * sem(x), mean(x) + 1.96 * sem(x))
 
 #' @title Correlation Matrix APA
-#' @description Correlation matrix in APA format (HTML)
+#' @description Correlation matrix in APA format
 #' @param X a matrix, data.frame, or data table
 #' @param vars (optional; Default = `NULL`) Character vector on which compute the function.
 #' @param digits (optional; Default = 2) 
-#' @return Correlation matrix in APA format (HTML)
+#' @param kableFormat (optional; Default = `TRUE`) Should the table be formated with kableExtra
+#' @return Correlation matrix in APA format (in HTML if `kableExtra = TRUE`).
 #' @examples
 #' apacorr(mtcars)
 #' @export apacorr
-apacorr <- function(X, vars = NULL, digits = 2) {
+apacorr <- function(X, vars = NULL, digits = 2, kableFormat = TRUE) {
   X <- data.table::data.table(X)
   if(!is.null(vars)) X <- X[, .SD, .SDcols = vars]
   
@@ -153,8 +154,12 @@ apacorr <- function(X, vars = NULL, digits = 2) {
   
   data.table::setcolorder(C, c("Variable", "M", "SD"))
   
-  kableExtra::kable(C) %>% 
-    kableExtra::kable_styling() %>% 
-    kableExtra::footnote(general = "*p<.05, **p<.01, ***p<.001",
-                         footnote_as_chunk = T)
+  if(kableFormat) {
+    kableExtra::kable(C) %>% 
+      kableExtra::kable_styling() %>% 
+      kableExtra::footnote(general = "*p<.05, **p<.01, ***p<.001",
+                           footnote_as_chunk = T)
+  } else {
+    return(C)
+  }
 }
