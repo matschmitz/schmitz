@@ -4,7 +4,7 @@
 \alias{apacorr}
 \title{Correlation Matrix APA}
 \usage{
-apacorr(X, vars = NULL, digits = 2, kableFormat = TRUE)
+apacorr(X, vars = NULL, digits = 2, kableFormat = TRUE, kableColor = TRUE)
 }
 \arguments{
 \item{X}{a matrix, data.frame, or data table}
@@ -14,6 +14,8 @@ apacorr(X, vars = NULL, digits = 2, kableFormat = TRUE)
 \item{digits}{(optional; Default = 2)}
 
 \item{kableFormat}{(optional; Default = `TRUE`) Should the table be formated with kableExtra}
+
+\item{kableColor}{(optional; Default = `TRUE`) Color formatble table (only if `kableFormat = TRUE`)}
 }
 \value{
 Correlation matrix in APA format (in HTML if `kableExtra = TRUE`).

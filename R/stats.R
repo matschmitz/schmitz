@@ -119,11 +119,12 @@ ci95 <- function(x) c(mean(x) - 1.96 * sem(x), mean(x) + 1.96 * sem(x))
 #' @param vars (optional; Default = `NULL`) Character vector on which compute the function.
 #' @param digits (optional; Default = 2) 
 #' @param kableFormat (optional; Default = `TRUE`) Should the table be formated with kableExtra
+#' @param kableColor (optional; Default = `TRUE`) Color formatble table (only if `kableFormat = TRUE`)
 #' @return Correlation matrix in APA format (in HTML if `kableExtra = TRUE`).
 #' @examples
 #' apacorr(mtcars)
 #' @export apacorr
-apacorr <- function(X, vars = NULL, digits = 2, kableFormat = TRUE) {
+apacorr <- function(X, vars = NULL, digits = 2, kableFormat = TRUE, kableColor = TRUE) {
   X <- data.table::data.table(X)
   if(!is.null(vars)) X <- X[, .SD, .SDcols = vars]
   
@@ -133,34 +134,52 @@ apacorr <- function(X, vars = NULL, digits = 2, kableFormat = TRUE) {
   P <- corrRes$P
   vars <- rownames(C)
   
-  C <- weights::rd(C, digits = 2)
+  COR <- weights::rd(C, digits = 2)
   
   P[is.na(P)] <- 99
   
-  C[as.vector(P < .001)]             <- paste0(C[as.vector(P < .001)], "***")
-  C[as.vector(P < .01 & P >= .001)]  <- paste0(C[as.vector(P < .01 & P >= .001)], "** ")
-  C[as.vector(P < .05 & P >= .01)]   <- paste0(C[as.vector(P < .05 & P >= .01)], "*  ")
-  C[as.vector(P >= .05)]             <- paste0(C[as.vector(P >= .05)], "   ")
-  C[as.vector(C %like% "^\\.")]      <- paste0(" ", C[as.vector(C %like% "^\\.")])
+  # Add sig stars
+  COR[as.vector(P < .001)]            <- paste0(COR[as.vector(P < .001)], "***")
+  COR[as.vector(P < .01 & P >= .001)] <- paste0(COR[as.vector(P < .01 & P >= .001)], "** ")
+  COR[as.vector(P < .05 & P >= .01)]  <- paste0(COR[as.vector(P < .05 & P >= .01)], "*  ")
+  COR[as.vector(P >= .05)]            <- paste0(COR[as.vector(P >= .05)], "   ")
+  COR[as.vector(COR %like% "^\\.")]   <- paste0(" ", COR[as.vector(COR %like% "^\\.")]) # fail
   
-  diag(C) <- "—   "
-  gdata::upperTriangle(C) <- ""
+  # Add colors
+  if (kableFormat & kableColor) {
+    COR[] <- paste0("<span style='color:xxx'>", COR, "</span>")
+    
+    COR[as.vector(P < .05 & C < 0     & C > -.10)] %<>% gsub("xxx", "#E6B0AA", .)
+    COR[as.vector(P < .05 & C <= -.10 & C > -.30)] %<>% gsub("xxx", "#CD6155", .)
+    COR[as.vector(P < .05 & C <= -.30 & C > -.50)] %<>% gsub("xxx", "#A93226", .)
+    COR[as.vector(P < .05 & C <= -.50)]            %<>% gsub("xxx", "#7B241C", .)
+    
+    COR[as.vector(P < .05 & C > 0    & C < .10)] %<>% gsub("xxx", "#A9DFBF", .)
+    COR[as.vector(P < .05 & C >= .10 & C < .30)] %<>% gsub("xxx", "#52BE80", .)
+    COR[as.vector(P < .05 & C >= .30 & C < .50)] %<>% gsub("xxx", "#229954", .)
+    COR[as.vector(P < .05 & C >= .50)]           %<>% gsub("xxx", "#196F3D", .)
+    
+    COR[as.vector(P >= .05)] %<>% gsub("xxx", "#ABB2B9", .)
+  }
   
-  C <- data.table::data.table(C)
-  data.table::setnames(C, names(C), as.character(1:ncol(C)))
+  diag(COR) <- "—  "
+  gdata::upperTriangle(COR) <- ""
   
-  C[, Variable := paste0(1:length(vars), ". ", vars)]
-  C[, M := round(colMeans(X), 2) %>% format(nsmall = 2)]
-  C[, SD := round(apply(X, 2, sd), 2) %>% format(nsmall = 2)]
+  COR <- data.table::data.table(COR)
+  data.table::setnames(COR, names(COR), as.character(1:ncol(COR)))
   
-  data.table::setcolorder(C, c("Variable", "M", "SD"))
+  COR[, Variable := paste0(1:length(vars), ". ", vars)]
+  COR[, M := round(colMeans(X), 2) %>% format(nsmall = 2)]
+  COR[, SD := round(apply(X, 2, sd), 2) %>% format(nsmall = 2)]
+  
+  data.table::setcolorder(COR, c("Variable", "M", "SD"))
   
   if(kableFormat) {
-    kableExtra::kable(C) %>% 
-      kableExtra::kable_styling() %>% 
+    kableExtra::kable(COR, escape = FALSE) %>% 
+      kableExtra::kable_styling(full_width = F, position = "left") %>% 
       kableExtra::footnote(general = "\\**p*<.05, \\*\\**p*<.01, \\*\\*\\**p*<.001",
-                           footnote_as_chunk = T)
+                           footnote_as_chunk = T) %>% print
   } else {
-    return(C)
+    return(COR)
   }
 }
