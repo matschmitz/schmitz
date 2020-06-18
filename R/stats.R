@@ -175,10 +175,11 @@ apacorr <- function(X, vars = NULL, digits = 2, kableFormat = TRUE, kableColor =
   data.table::setcolorder(COR, c("Variable", "M", "SD"))
   
   if(kableFormat) {
-    kableExtra::kable(COR, escape = FALSE) %>% 
-      kableExtra::kable_styling(full_width = F, position = "left") %>% 
+    COR %>% 
+    kableExtra::kable(escape = FALSE) %>% 
+      kableExtra::kable_styling(full_width = FALSE, position = "left") %>% 
       kableExtra::footnote(general = "\\**p*<.05, \\*\\**p*<.01, \\*\\*\\**p*<.001",
-                           footnote_as_chunk = T) %>% print
+                           footnote_as_chunk = TRUE)
   } else {
     return(COR)
   }
