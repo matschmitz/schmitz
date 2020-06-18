@@ -141,6 +141,7 @@ apacorr <- function(X, vars = NULL, digits = 2, kableFormat = TRUE) {
   C[as.vector(P < .01 & P >= .001)]  <- paste0(C[as.vector(P < .01 & P >= .001)], "** ")
   C[as.vector(P < .05 & P >= .01)]   <- paste0(C[as.vector(P < .05 & P >= .01)], "*  ")
   C[as.vector(P >= .05)]             <- paste0(C[as.vector(P >= .05)], "   ")
+  C[as.vector(C %like% "^\\.")]      <- paste0(" ", C[as.vector(C %like% "^\\.")])
   
   diag(C) <- "—   "
   gdata::upperTriangle(C) <- ""
