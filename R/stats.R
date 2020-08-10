@@ -68,7 +68,7 @@ ss <- function(mdl) {
 #' ssb(mdl)
 #' @export ssBF
 ssBF <- function(mdl) {
-  mdl.s <- ss(mdl)
+  mdl.s <- quiet(ss(mdl))
 
   mdl.s[, BF10 := {
     .coefs <- ifelse(` ` == "(Intercept)", 1, ` `)
