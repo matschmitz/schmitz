@@ -87,8 +87,10 @@ ssBF <- function(mdl) {
   mdl.type <- ifelse(is.null(names(mdl)), "lmer", "lm")
   if (mdl.type == "lm") {
     mdl.s <- mdl.s[, .(` `, b, SE, df, Fval, peta2, BF10, BF01, p, `  `)]
+    as.character(mdl$call)[2] %>% cat("\n")
   } else {
     mdl.s <- mdl.s[, .(` `, b, SE, df, Fval, BF10, BF01, p, `  `)]
+    as.character(mdl@call)[2] %>% cat("\n")
   }
   
   print(mdl.s)
