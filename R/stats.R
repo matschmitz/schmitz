@@ -51,6 +51,14 @@ ss <- function(mdl) {
     mdl.s <- mdl.s[, .(
       ` ` = coefs, b = round(`Estimate`, 2), SE = round(`Std. Error`, 2),
       df = round(df, 2), Fval = round(Fval, 2),
+      # See https://doi.org/10.5334/joc.10 for the computation COMPUTE D CONVERT TO ETA
+      peta2 = {
+        fixedEffects <- abs(fixef(mdl0))
+        pooledVariance <- sqrt(sum(data.frame(VarCorr(mdl0))[, "vcov"]))
+        cohend <- fixedEffects/pooledVariance
+        peta2 <- cohend**2/(cohend**2 + 4)
+        round(peta2, 3)
+        },
       p = ifelse(`Pr(>|t|)` < .001, "<.001", as.character(round(`Pr(>|t|)`, 3))),
       `  `
     )]
@@ -89,7 +97,7 @@ ssBF <- function(mdl) {
     mdl.s <- mdl.s[, .(` `, b, SE, df, Fval, peta2, BF10, BF01, p, `  `)]
     as.character(mdl$call)[2] %>% cat("\n")
   } else {
-    mdl.s <- mdl.s[, .(` `, b, SE, df, Fval, BF10, BF01, p, `  `)]
+    mdl.s <- mdl.s[, .(` `, b, SE, df, Fval, peta2, BF10, BF01, p, `  `)]
     as.character(mdl@call)[2] %>% cat("\n")
   }
   
