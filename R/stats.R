@@ -53,8 +53,8 @@ ss <- function(mdl) {
       df = round(df, 2), Fval = round(Fval, 2),
       # See https://doi.org/10.5334/joc.10 for the computation COMPUTE D CONVERT TO ETA
       peta2 = {
-        fixedEffects <- abs(fixef(mdl0))
-        pooledVariance <- sqrt(sum(data.frame(VarCorr(mdl0))[, "vcov"]))
+        fixedEffects <- abs(fixef(mdl))
+        pooledVariance <- sqrt(sum(data.frame(VarCorr(mdl))[, "vcov"]))
         cohend <- fixedEffects/pooledVariance
         peta2 <- cohend**2/(cohend**2 + 4)
         round(peta2, 3)
