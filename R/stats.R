@@ -53,12 +53,10 @@ ss <- function(mdl) {
       df = round(df, 2), Fval = round(Fval, 2),
       # See https://doi.org/10.5334/joc.10 for the computation COMPUTE D CONVERT TO ETA
       peta2 = {
-        fixedEffects <- abs(fixef(mdl))
-        pooledVariance <- sqrt(sum(data.frame(VarCorr(mdl))[, "vcov"]))
-        cohend <- fixedEffects/pooledVariance
-        peta2 <- cohend**2/(cohend**2 + 4)
-        round(peta2, 3)
-        },
+        rsq <- r2glmm::r2beta(mdl, method = 'nsj', partial = TRUE)[, "Rsq"]
+        rsq[1] <- NA # not available from the package
+        round(rsq, 3)
+      },
       p = ifelse(`Pr(>|t|)` < .001, "<.001", as.character(round(`Pr(>|t|)`, 3))),
       `  `
     )]
