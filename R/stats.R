@@ -177,8 +177,8 @@ apacorr <- function(X, vars = NULL, digits = 2, kableFormat = TRUE, kableColor =
   data.table::setnames(COR, names(COR), as.character(1:ncol(COR)))
   
   COR[, Variable := paste0(1:length(vars), ". ", vars)]
-  COR[, M := round(colMeans(X), 2) %>% format(nsmall = 2)]
-  COR[, SD := round(apply(X, 2, sd), 2) %>% format(nsmall = 2)]
+  COR[, M := round(colMeans(X, na.rm = TRUE), 2) %>% format(nsmall = 2)]
+  COR[, SD := round(apply(X, 2, sd, na.rm = TRUE), 2) %>% format(nsmall = 2)]
   
   data.table::setcolorder(COR, c("Variable", "M", "SD"))
   
