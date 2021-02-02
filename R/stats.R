@@ -56,7 +56,7 @@ ss <- function(mdl) {
         rsq <- data.table(r2glmm::r2beta(mdl, method = 'nsj', partial = TRUE))
         rsq <- rsq[, .(Effect, Rsq)]
         rsq[Effect == "Model", `:=`(Effect = "(Intercept)", Rsq = NA)]
-        rsq <- rsq[match(Effect, mdl.s$coefs)][, Rsq] # order coefficients correctly
+        rsq <- rsq[match(mdl.s$coefs, Effect)][, Rsq] # order coefficients correctly
         round(rsq, 3)
       },
       p = ifelse(`Pr(>|t|)` < .001, "<.001", as.character(round(`Pr(>|t|)`, 3))),
