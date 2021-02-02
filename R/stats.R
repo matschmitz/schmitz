@@ -37,7 +37,7 @@ ss <- function(mdl) {
   mdl.s[`Pr(>|t|)` < .05, `  ` := "*"  ]
   mdl.s[`Pr(>|t|)` < .01, `  ` := "**" ]
   mdl.s[`Pr(>|t|)` < .001, `  ` := "***"]
-
+  
   if (mdl.type == "lm") {
     mdl.s <- mdl.s[, .(
       ` ` = coefs, b = round(`Estimate`, 2), SE = round(`Std. Error`, 2),
@@ -53,8 +53,10 @@ ss <- function(mdl) {
       df = round(df, 2), Fval = round(Fval, 2),
       # See https://doi.org/10.5334/joc.10 for the computation COMPUTE D CONVERT TO ETA
       peta2 = {
-        rsq <- r2glmm::r2beta(mdl, method = 'nsj', partial = TRUE)[, "Rsq"]
-        rsq[1] <- NA # not available from the package
+        rsq <- data.table(r2glmm::r2beta(mdl, method = 'nsj', partial = TRUE))
+        rsq <- rsq[, .(Effect, Rsq)]
+        rsq[Effect == "Model", `:=`(Effect = "(Intercept)", Rsq = NA)]
+        rsq <- rsq[match(Effect, mdl.s$coefs)][, Rsq] # order coefficients correctly
         round(rsq, 3)
       },
       p = ifelse(`Pr(>|t|)` < .001, "<.001", as.character(round(`Pr(>|t|)`, 3))),
