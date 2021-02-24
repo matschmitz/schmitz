@@ -76,7 +76,6 @@ extractNumber <- function(x, convertToNum = TRUE) {
 #' @description Completely silence the output from a function
 #' @param x a function with output
 #' @return The function output
-#' @example y <- quiet(cat(1)) # no output is printed
 #' @export quiet
 quiet <- function(x) { 
     sink(tempfile()) 

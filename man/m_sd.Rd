@@ -2,7 +2,7 @@
 % Please edit documentation in R/stats.R
 \name{m_sd}
 \alias{m_sd}
-\title{Formated mean and standard deviation}
+\title{Formatted mean and standard deviation}
 \usage{
 m_sd(x, ...)
 }
@@ -10,7 +10,7 @@ m_sd(x, ...)
 \item{x}{a numerical vector}
 }
 \value{
-formated string
+formatted string
 }
 \description{
 Format the mean and sd of a vector

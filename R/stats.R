@@ -1,7 +1,7 @@
-#' @title Formated mean and standard deviation
+#' @title Formatted mean and standard deviation
 #' @description Format the mean and sd of a vector
 #' @param x a numerical vector
-#' @return formated string
+#' @return formatted string
 #' @examples
 #' m_sd(rnorm(100))
 #' @export m_sd
@@ -40,26 +40,26 @@ ss <- function(mdl) {
   
   if (mdl.type == "lm") {
     mdl.s <- mdl.s[, .(
-      ` ` = coefs, b = round(`Estimate`, 2), SE = round(`Std. Error`, 2),
-      df = round(df, 2), Fval = round(Fval, 2),
-      peta2 = round(`pEta-sqr`, 3),
-      p = ifelse(`Pr(>|t|)` < .001, "<.001", as.character(round(`Pr(>|t|)`, 3))),
+      ` ` = coefs, b = sprintf("%.2f", `Estimate`), SE = sprintf("%.2f", `Std. Error`),
+      df = sprintf("%.2f", df), Fval = sprintf("%.2f", Fval),
+      peta2 = sprintf("%.3f", `pEta-sqr`),
+      p = ifelse(`Pr(>|t|)` < .001, "<.001", sprintf("%.3f", `Pr(>|t|)`)),
       `  `
     )]
     as.character(mdl$call)[2] %>% cat("\n")
   } else { # lmer
     mdl.s <- mdl.s[, .(
-      ` ` = coefs, b = round(`Estimate`, 2), SE = round(`Std. Error`, 2),
-      df = round(df, 2), Fval = round(Fval, 2),
+      ` ` = coefs, b = sprintf("%.2f", `Estimate`), SE = sprintf("%.2f", `Std. Error`),
+      df = sprintf("%.2f", df), Fval = sprintf("%.2f", Fval),
       # See https://doi.org/10.5334/joc.10 for the computation COMPUTE D CONVERT TO ETA
       peta2 = {
         rsq <- data.table(r2glmm::r2beta(mdl, method = 'nsj', partial = TRUE))
         rsq <- rsq[, .(Effect, Rsq)]
         rsq[Effect == "Model", `:=`(Effect = "(Intercept)", Rsq = NA)]
         rsq <- rsq[match(mdl.s$coefs, Effect)][, Rsq] # order coefficients correctly
-        round(rsq, 3)
+        sprintf("%.3f", rsq)
       },
-      p = ifelse(`Pr(>|t|)` < .001, "<.001", as.character(round(`Pr(>|t|)`, 3))),
+      p = ifelse(`Pr(>|t|)` < .001, "<.001", sprintf("%.3f", `Pr(>|t|)`)),
       `  `
     )]
     as.character(mdl@call)[2] %>% cat("\n")
@@ -87,10 +87,10 @@ ssBF <- function(mdl) {
   mdl.s[, BF01 := 1 / BF10]
   mdl.s[, BF10 := dplyr::case_when(BF10 > 1e5 ~ ">1e5",
                                    BF10 < .001 ~ "<.001",
-                                   TRUE ~ as.character(round(BF10, 2)))]
+                                   TRUE ~ sprintf("%.2f", BF10))]
   mdl.s[, BF01 := dplyr::case_when(BF01 > 1e5 ~ ">1e5",
                                    BF01 < .001 ~ "<.001",
-                                   TRUE ~ as.character(round(BF01, 2)))]
+                                   TRUE ~ sprintf("%.2f", BF01))]
   
   mdl.type <- ifelse(is.null(names(mdl)), "lmer", "lm")
   if (mdl.type == "lm") {
@@ -179,8 +179,8 @@ apacorr <- function(X, vars = NULL, digits = 2, kableFormat = TRUE, kableColor =
   data.table::setnames(COR, names(COR), as.character(1:ncol(COR)))
   
   COR[, Variable := paste0(1:length(vars), ". ", vars)]
-  COR[, M := round(colMeans(X, na.rm = TRUE), 2) %>% format(nsmall = 2)]
-  COR[, SD := round(apply(X, 2, sd, na.rm = TRUE), 2) %>% format(nsmall = 2)]
+  COR[, M := sprintf("%.2f", colMeans(X, na.rm = TRUE))]
+  COR[, SD := sprintf("%.2f", apply(X, 2, sd, na.rm = TRUE))]
   
   data.table::setcolorder(COR, c("Variable", "M", "SD"))
   
