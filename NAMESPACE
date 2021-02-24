@@ -2,6 +2,7 @@
 
 export("%ni%")
 export(apacorr)
+export(apatheme)
 export(ci95)
 export(extractNumber)
 export(genCI)

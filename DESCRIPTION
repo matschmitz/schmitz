@@ -16,7 +16,11 @@ Imports:
     magick,
     magrittr,
     png,
-    stringr
+    stringr,
+    ggplot2,
+    lmerTest,
+    lme4
 RoxygenNote: 7.1.1
 Suggests: 
     testthat
+
