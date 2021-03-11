@@ -4,12 +4,21 @@
 \alias{apacorr}
 \title{Correlation Matrix APA}
 \usage{
-apacorr(X, vars = NULL, digits = 2, kableFormat = TRUE, kableColor = TRUE)
+apacorr(
+  X,
+  vars = NULL,
+  w = NULL,
+  digits = 2,
+  kableFormat = TRUE,
+  kableColor = TRUE
+)
 }
 \arguments{
 \item{X}{a matrix, data.frame, or data table}
 
 \item{vars}{(optional; Default = `NULL`) Character vector on which compute the function.}
+
+\item{w}{(optional; Default = `NULL`) Weight vector to be applied to the analyses.}
 
 \item{digits}{(optional; Default = 2)}
 

@@ -127,6 +127,7 @@ ci95 <- function(x) c(mean(x) - 1.96 * sem(x), mean(x) + 1.96 * sem(x))
 #' @description Correlation matrix in APA format
 #' @param X a matrix, data.frame, or data table
 #' @param vars (optional; Default = `NULL`) Character vector on which compute the function.
+#' @param w (optional; Default = `NULL`) Weight vector to be applied to the analyses.
 #' @param digits (optional; Default = 2) 
 #' @param kableFormat (optional; Default = `TRUE`) Should the table be formated with kableExtra
 #' @param kableColor (optional; Default = `TRUE`) Color formatble table (only if `kableFormat = TRUE`)
@@ -134,17 +135,25 @@ ci95 <- function(x) c(mean(x) - 1.96 * sem(x), mean(x) + 1.96 * sem(x))
 #' @examples
 #' apacorr(mtcars)
 #' @export apacorr
-apacorr <- function(X, vars = NULL, digits = 2, kableFormat = TRUE, kableColor = TRUE) {
+apacorr <- function(X, vars = NULL, w = NULL, digits = 2, kableFormat = TRUE, kableColor = TRUE) {
   X <- data.table::data.table(X)
   if(!is.null(vars)) X <- X[, .SD, .SDcols = vars]
   
-  corrRes <- Hmisc::rcorr(as.matrix(X))
+  if(is.null(w)) {
+    corrRes <- Hmisc::rcorr(as.matrix(X))
+    C <- corrRes$r
+    P <- corrRes$P
+    vars <- rownames(C)
+  }
   
-  C <- corrRes$r
-  P <- corrRes$P
-  vars <- rownames(C)
+  if(!is.null(w)) {
+    corrRes <- weights::wtd.cor(X, weight = w, mean1 = FALSE)
+    C <- corrRes$correlation
+    P <- corrRes$p.value
+    vars <- rownames(C)
+  }
   
-  COR <- weights::rd(C, digits = 2)
+  COR <- weights::rd(C, digits = digits)
   
   P[is.na(P)] <- 99
   
@@ -179,14 +188,23 @@ apacorr <- function(X, vars = NULL, digits = 2, kableFormat = TRUE, kableColor =
   data.table::setnames(COR, names(COR), as.character(1:ncol(COR)))
   
   COR[, Variable := paste0(1:length(vars), ". ", vars)]
-  COR[, M := sprintf("%.2f", colMeans(X, na.rm = TRUE))]
-  COR[, SD := sprintf("%.2f", apply(X, 2, sd, na.rm = TRUE))]
+  if (is.null(w)) {
+    COR[, M := sprintf("%.2f", colMeans(X, na.rm = TRUE))]
+    COR[, SD := sprintf("%.2f", apply(X, 2, sd, na.rm = TRUE))]
+  }
+  
+  if (!is.null(w)) {
+    COR[, M := sprintf("%.2f", apply(X, 2, Hmisc::wtd.mean, weights = w, na.rm = TRUE))]
+    COR[, SD := sprintf("%.2f", apply(X, 2, function(x) {
+      sqrt(Hmisc::wtd.var(x, weights = w, na.rm = TRUE))
+    }))]
+  }
   
   data.table::setcolorder(COR, c("Variable", "M", "SD"))
   
   if(kableFormat) {
     COR %>% 
-    kableExtra::kable(escape = FALSE) %>% 
+      kableExtra::kable(escape = FALSE) %>% 
       kableExtra::kable_styling(full_width = FALSE, position = "left") %>% 
       kableExtra::footnote(general = "\\**p*<.05, \\*\\**p*<.01, \\*\\*\\**p*<.001",
                            footnote_as_chunk = TRUE)
