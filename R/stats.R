@@ -142,24 +142,27 @@ ci95 <- function(x) c(mean(x) - 1.96 * sem(x), mean(x) + 1.96 * sem(x))
 #' @param vars (optional; Default = `NULL`) Character vector on which compute the function.
 #' @param w (optional; Default = `NULL`) Weight vector to be applied to the analyses.
 #' @param digits (optional; Default = 2) 
+#' @param corType (optional; Default = "pearson") Correlation type.
 #' @param kableFormat (optional; Default = `TRUE`) Should the table be formated with kableExtra
 #' @param kableColor (optional; Default = `TRUE`) Color formatble table (only if `kableFormat = TRUE`)
 #' @return Correlation matrix in APA format (in HTML if `kableExtra = TRUE`).
 #' @examples
 #' apacorr(mtcars)
 #' @export apacorr
-apacorr <- function(X, vars = NULL, w = NULL, digits = 2, kableFormat = TRUE, kableColor = TRUE) {
+apacorr <- function(X, vars = NULL, w = NULL, digits = 2, corType = "pearson",
+                    kableFormat = TRUE, kableColor = TRUE) {
   X <- data.table::data.table(X)
   if(!is.null(vars)) X <- X[, .SD, .SDcols = vars]
   
   if(is.null(w)) {
-    corrRes <- Hmisc::rcorr(as.matrix(X))
+    corrRes <- Hmisc::rcorr(as.matrix(X), type = corType)
     C <- corrRes$r
     P <- corrRes$P
     vars <- rownames(C)
   }
   
   if(!is.null(w)) {
+    if (!corType == "pearson") stop("corType can only be 'pearson' for wieghted correlations")
     corrRes <- weights::wtd.cor(X, weight = w, mean1 = FALSE)
     C <- corrRes$correlation
     P <- corrRes$p.value

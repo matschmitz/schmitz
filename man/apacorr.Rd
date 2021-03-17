@@ -9,6 +9,7 @@ apacorr(
   vars = NULL,
   w = NULL,
   digits = 2,
+  corType = "pearson",
   kableFormat = TRUE,
   kableColor = TRUE
 )
@@ -21,6 +22,8 @@ apacorr(
 \item{w}{(optional; Default = `NULL`) Weight vector to be applied to the analyses.}
 
 \item{digits}{(optional; Default = 2)}
+
+\item{corType}{(optional; Default = "pearson") Correlation type.}
 
 \item{kableFormat}{(optional; Default = `TRUE`) Should the table be formated with kableExtra}
 
