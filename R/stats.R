@@ -17,7 +17,8 @@ m_sd <- function(x, ...) sprintf("%.2f(%.2f)", mean(x, ...), sd(x, ...))
 #' @export ss
 ss <- function(mdl) {
   mdl.type <- ifelse(is.null(names(mdl)), "lmer", "lm")
-  mdl.coefficients <- summary(mdl)$coefficients
+  mdl.summary <- summary(mdl)
+  mdl.coefficients <- mdl.summary$coefficients
   if (mdl.type == "lm") {
     mdl.effects <- lmSupport::modelEffectSizes(mdl, Print = FALSE)$Effects[, 2:3]
     if (is.matrix(mdl.effects)) {
@@ -39,14 +40,26 @@ ss <- function(mdl) {
   mdl.s[`Pr(>|t|)` < .001, `  ` := "***"]
   
   if (mdl.type == "lm") {
+    confints <- confint(mdl)
     mdl.s <- mdl.s[, .(
-      ` ` = coefs, b = sprintf("%.2f", `Estimate`), SE = sprintf("%.2f", `Std. Error`),
-      df = sprintf("%.2f", df), Fval = sprintf("%.2f", Fval),
-      peta2 = sprintf("%.3f", `pEta-sqr`),
-      p = ifelse(`Pr(>|t|)` < .001, "<.001", sprintf("%.3f", `Pr(>|t|)`)),
+      ` `     = coefs,
+      b       = sprintf("%.2f", `Estimate`),
+      `95%CI` = sprintf("(%.2f, %.2f)", confints[, 1], confints[, 2]),
+      # SE      = sprintf("%.2f", `Std. Error`),
+      df      = sprintf("%.f", df),
+      Fval    = sprintf("%.2f", Fval),
+      peta2   = weights::rd(`pEta-sqr`, digits = 3),
+      p       = ifelse(`Pr(>|t|)` < .001, "<.001", 
+                       weights::rd(`Pr(>|t|)`, digits = 3)),
       `  `
     )]
     as.character(mdl$call)[2] %>% cat("\n")
+    f <- mdl.summary$fstatistic
+    p <- pf(f[1],f[2],f[3],lower.tail=F)
+    cat(sprintf("R2=%s, F(%.f, %.f)=%.2f,  p=%s",
+                weights::rd(mdl.summary$r.squared, digits = 2),
+                mdl.summary$fstatistic[2], mdl.summary$fstatistic[3], mdl.summary$fstatistic[1],
+                weights::rd(p, digits = 3)), "\n\n")
   } else { # lmer
     mdl.s <- mdl.s[, .(
       ` ` = coefs, b = sprintf("%.2f", `Estimate`), SE = sprintf("%.2f", `Std. Error`),
@@ -59,10 +72,10 @@ ss <- function(mdl) {
         rsq <- rsq[match(mdl.s$coefs, Effect)][, Rsq] # order coefficients correctly
         sprintf("%.3f", rsq)
       },
-      p = ifelse(`Pr(>|t|)` < .001, "<.001", sprintf("%.3f", `Pr(>|t|)`)),
+      p = ifelse(`Pr(>|t|)` < .001, "<.001", weights::rd(`Pr(>|t|)`, digits = 3)),
       `  `
     )]
-    as.character(mdl@call)[2] %>% cat("\n")
+    as.character(mdl@call)[2] %>% cat("\n\n")
   }
   print(mdl.s)
 }
