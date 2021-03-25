@@ -8,6 +8,22 @@
 m_sd <- function(x, ...) sprintf("%.2f(%.2f)", mean(x, ...), sd(x, ...))
 
 
+#' @title Print p-values
+#' @description Nicely print p-values (*p<.05, **p<.01, ***p<.001)
+#' @param mdl an lm model obtained from lm
+#' @return data table with summary statistics
+#' @examples
+#' pprint(.003)
+#' @export pprint
+pprint <- function(pval) {
+  formated_pval <- data.table::fcase(pval < .001, sprintf("%.3f***", pval),
+                                     pval < .01, sprintf("%.3f**", pval),
+                                     pval < .05, sprintf("%.3f*", pval),
+                                     pval >= .05, sprintf("%.3f", pval))
+  gsub("0\\.", ".", formated_pval)
+}
+
+
 #' @title LMM and LM results summary
 #' @description Formats the results from LMM and LM. Provides effect sizes.
 #' @param mdl an lm model obtained from lm
@@ -57,9 +73,9 @@ ss <- function(mdl) {
     f <- mdl.summary$fstatistic
     p <- pf(f[1],f[2],f[3],lower.tail=F)
     cat(sprintf("R2=%s, F(%.f, %.f)=%.2f,  p=%s",
-                weights::rd(mdl.summary$r.squared, digits = 2),
+                weights::rd(mdl.summary$r.squared, digits = 3),
                 mdl.summary$fstatistic[2], mdl.summary$fstatistic[3], mdl.summary$fstatistic[1],
-                weights::rd(p, digits = 3)), "\n\n")
+                pprint(p)), "\n\n")
   } else { # lmer
     mdl.s <- mdl.s[, .(
       ` ` = coefs, b = sprintf("%.2f", `Estimate`), SE = sprintf("%.2f", `Std. Error`),
