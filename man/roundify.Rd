@@ -14,7 +14,7 @@ roundify(X, digits = 2)
 \item{printOut}{logical that indicates if the output needs to be printed}
 }
 \description{
-Try to round each numerical column of a data.table and the prints it. Usefull with
+Try to round each numerical column of a data.table and the prints it. Useful with
   rmarkdown reports.
 }
 \examples{

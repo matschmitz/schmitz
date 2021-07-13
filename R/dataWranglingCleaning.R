@@ -36,7 +36,7 @@ numerify <- function(X) {
 }
 
 #' @title Roundify
-#' @description Try to round each numerical column of a data.table and the prints it. Usefull with
+#' @description Try to round each numerical column of a data.table and the prints it. Useful with
 #'   rmarkdown reports.
 #' @param X data.table
 #' @param digits integer
@@ -51,6 +51,26 @@ roundify <- function(X, digits = 2) {
     Y[, (.cols) := lapply(.SD, round, digits = digits), .SDcols = .cols]
     Y
 }
+
+#' @title Round 2
+#' @description Rounds the number to two decimal points.
+#' If the value < .01 than a label "<.01" is used.
+#' Removes leading zeros.
+#' @param x a number or a numeric vector
+#' @return a string or a character vector
+#' @examples round2(c(0.033, 0.1, 0.0002))
+#' @export round2
+round2 <- function(x) gsub("0\\.", "\\.", ifelse(x < .01, "<.01", sprintf("%.2f", x)))
+
+#' @title Round 3
+#' @description Rounds the number to three decimal points.
+#' If the value < .001 than a label "<.001" is used.
+#' Removes leading zeros.
+#' @param x a number or a numeric vector
+#' @return a string or a character vector
+#' @examples round3(c(0.033, 0.1, 0.0002))
+#' @export round3
+round3 <- function(x) gsub("0\\.", "\\.", ifelse(x < .001, "<.001", sprintf("%.3f", x)))
 
 #' @title Extract number from string
 #' @description Extracts a number from a string

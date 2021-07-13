@@ -64,16 +64,15 @@ ss <- function(mdl) {
       # SE      = sprintf("%.2f", `Std. Error`),
       df      = sprintf("%.f", df),
       Fval    = sprintf("%.2f", Fval),
-      peta2   = weights::rd(`pEta-sqr`, digits = 3),
-      p       = ifelse(`Pr(>|t|)` < .001, "<.001", 
-                       weights::rd(`Pr(>|t|)`, digits = 3)),
+      peta2   = schmitz::round3(`pEta-sqr`),
+      p       = schmitz::round3(`Pr(>|t|)`),
       `  `
     )]
     as.character(mdl$call)[2] %>% cat("\n")
     f <- mdl.summary$fstatistic
     p <- pf(f[1],f[2],f[3],lower.tail=F)
     cat(sprintf("R2=%s, F(%.f, %.f)=%.2f,  p=%s",
-                weights::rd(mdl.summary$r.squared, digits = 3),
+                schmitz::round3(mdl.summary$r.squared),
                 mdl.summary$fstatistic[2], mdl.summary$fstatistic[3], mdl.summary$fstatistic[1],
                 pprint(p)), "\n\n")
   } else { # lmer
@@ -86,9 +85,9 @@ ss <- function(mdl) {
         rsq <- rsq[, .(Effect, Rsq)]
         rsq[Effect == "Model", `:=`(Effect = "(Intercept)", Rsq = NA)]
         rsq <- rsq[match(mdl.s$coefs, Effect)][, Rsq] # order coefficients correctly
-        sprintf("%.3f", rsq)
+        schmitz::round3(rsq)
       },
-      p = ifelse(`Pr(>|t|)` < .001, "<.001", weights::rd(`Pr(>|t|)`, digits = 3)),
+      p = schmitz::round3(`Pr(>|t|)`),
       `  `
     )]
     as.character(mdl@call)[2] %>% cat("\n\n")
