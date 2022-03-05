@@ -87,7 +87,6 @@ ss <- function(mdl) {
                             sprintf("R2=%s, F(%.f,%.f)=%.2f,  p=%s",
                                     schmitz::round3(rsq), df1, df2, f, pprint(p)))
     
-    cat(mdl.fit.print, "\n\n")
   } else { # lmer
     mdl.s <- mdl.s[, .(
       ` ` = coefs, b = sprintf("%.2f", `Estimate`), SE = sprintf("%.2f", `Std. Error`),
@@ -103,9 +102,9 @@ ss <- function(mdl) {
       p = schmitz::round3(`Pr(>|t|)`),
       `  `
     )]
-    as.character(mdl@call)[2] %>% cat("\n\n")
+    mdl.fit.print <- as.character(mdl@call)[2]
   }
-  mdl.s
+  cat(mdl.fit.print, "\n\n", mdl.s)
 }
 
 
