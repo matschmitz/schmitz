@@ -1,6 +1,17 @@
 #' @import data.table
 #' @import magrittr
 
+
+#' @title Extract number
+#' @description Extracts number (positive or negative) from a string and converts it to numerical.
+#' If two number in the same string, then it will return the numbers combined
+#' @param x a (vector) string
+#' @return Numeric
+#' @examples extract_num("I am 22 years old")
+#' extract_num(c("I am -22 years old", "-74 and 80"))
+#' @export extract_num
+extract_num <- function(x) as.numeric(gsub("[^0-9\\-]+","",as.character(x)))
+
 #' @title Left Outter Join
 #' @description Update and merge columuns from `Y` onto `X`. If data tables are loaded, make sure
 #'  to run `setDT(X)` and `setDT(Y)`.

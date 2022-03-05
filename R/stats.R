@@ -16,7 +16,7 @@ m_sd <- function(x, ...) sprintf("%.2f(%.2f)", mean(x, ...), sd(x, ...))
 #' pprint(.003)
 #' @export pprint
 pprint <- function(pval) {
-  formated_pval <- data.table::fcase(pval < .001, sprintf("%.3f***", pval),
+  formated_pval <- data.table::fcase(pval < .001, ".001**",
                                      pval < .01, sprintf("%.3f**", pval),
                                      pval < .05, sprintf("%.3f*", pval),
                                      pval >= .05, sprintf("%.3f", pval))
@@ -69,12 +69,25 @@ ss <- function(mdl) {
       `  `
     )]
     as.character(mdl$call)[2] %>% cat("\n")
-    f <- mdl.summary$fstatistic
-    p <- pf(f[1],f[2],f[3],lower.tail=F)
-    cat(sprintf("R2=%s, F(%.f, %.f)=%.2f,  p=%s",
-                schmitz::round3(mdl.summary$r.squared),
-                mdl.summary$fstatistic[2], mdl.summary$fstatistic[3], mdl.summary$fstatistic[1],
-                pprint(p)), "\n\n")
+    rsq <- mdl.summary$r.squared
+    f <- mdl.summary$fstatistic[1]
+    df1 <- mdl.summary$fstatistic[2]
+    df2 <- mdl.summary$fstatistic[3]
+    p <- pf(f, df1, df2, lower.tail = F)
+    attr(mdl.s, "rsq") <- rsq
+    attr(mdl.s, "n") <- nrow(mdl$model)
+    attr(mdl.s, "f") <- f
+    attr(mdl.s, "df1") <- df1
+    attr(mdl.s, "df2") <- df2
+    attr(mdl.s, "p") <- p
+    
+    mdl.fit.print <- ifelse(p < .001, 
+                            sprintf("R2=%s, F(%.f,%.f)=%.2f,  p<%s",
+                                    schmitz::round3(rsq), df1, df2, f, pprint(p)),
+                            sprintf("R2=%s, F(%.f,%.f)=%.2f,  p=%s",
+                                    schmitz::round3(rsq), df1, df2, f, pprint(p)))
+    
+    cat(mdl.fit.print, "\n\n")
   } else { # lmer
     mdl.s <- mdl.s[, .(
       ` ` = coefs, b = sprintf("%.2f", `Estimate`), SE = sprintf("%.2f", `Std. Error`),
@@ -105,7 +118,7 @@ ss <- function(mdl) {
 #' @export ssBF
 ssBF <- function(mdl) {
   mdl.s <- quiet(ss(mdl))
-
+  
   mdl.s[, BF10 := {
     .coefs <- ifelse(` ` == "(Intercept)", 1, ` `)
     mdl_null <- update(mdl, paste("~ . -", .coefs))
