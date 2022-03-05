@@ -16,7 +16,7 @@ m_sd <- function(x, ...) sprintf("%.2f(%.2f)", mean(x, ...), sd(x, ...))
 #' pprint(.003)
 #' @export pprint
 pprint <- function(pval) {
-  formated_pval <- data.table::fcase(pval < .001, ".001**",
+  formated_pval <- data.table::fcase(pval < .001, ".001***",
                                      pval < .01, sprintf("%.3f**", pval),
                                      pval < .05, sprintf("%.3f*", pval),
                                      pval >= .05, sprintf("%.3f", pval))
@@ -105,7 +105,7 @@ ss <- function(mdl) {
     )]
     as.character(mdl@call)[2] %>% cat("\n\n")
   }
-  print(mdl.s)
+  mdl.s
 }
 
 
