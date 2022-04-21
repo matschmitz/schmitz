@@ -105,7 +105,7 @@ ss <- function(mdl) {
     mdl.fit.print <- as.character(mdl@call)[2]
   }
   cat(mdl.fit.print, "\n\n")
-  mdl.s
+  print(mdl.s, row.names = FALSE)
 }
 
 
