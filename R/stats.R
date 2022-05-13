@@ -32,7 +32,7 @@ pprint <- function(pval) {
 #' @export ss_anova
 ss_anova <- function(mdl) {
   X <- anova(mdl)
-  X <- data.table::data.table(x, keep.rownames = TRUE)
+  X <- data.table::data.table(X, keep.rownames = TRUE)
   names(X) <- c(" ", "ssq", "mean_sq", "num_df", "den_df", "fval", "pval")
   
   X[pval >= .1, `  ` := " "  ]
