@@ -23,6 +23,44 @@ pprint <- function(pval) {
   gsub("0\\.", ".", formated_pval)
 }
 
+#' @title Anova results summary
+#' @description Formats the results from Anova and provides effect sizes.
+#' @param mdl an lm(er) model obtained from lm(er)
+#' @return data table with summary statistics
+#' @examples
+#' ss_anova(mdl)
+#' @export ss_anova
+ss_anova <- function(mdl) {
+  X <- anova(mdl)
+  X <- data.table::data.table(x, keep.rownames = TRUE)
+  names(X) <- c(" ", "ssq", "mean_sq", "num_df", "den_df", "fval", "pval")
+  
+  X[pval >= .1, `  ` := " "  ]
+  X[pval < .1, `  ` := "."  ]
+  X[pval < .05, `  ` := "*"  ]
+  X[pval < .01, `  ` := "**" ]
+  X[pval < .001, `  ` := "***"]
+  
+  
+  X[, peta2 := {
+    rsq <- data.table(r2glmm::r2beta(mdl, method = 'nsj', partial = TRUE))
+    rsq <- rsq[, .(Effect, Rsq)]
+    rsq[Effect == "Model", `:=`(Effect = "(Intercept)", Rsq = NA)]
+    rsq <- rsq[match(X$` `, Effect)][, Rsq] # order coefficients correctly
+    schmitz::round3(rsq)
+  }]
+  
+  X[, pval := schmitz::round3(pval)]
+  
+  X[, ssq := sprintf("%.2f", ssq)]
+  X[, mean_sq := sprintf("%.2f", mean_sq)]
+  X[, fval := sprintf("%.2f", fval)]
+  
+  X <- X[, .(` `, ssq, mean_sq, num_df, den_df, fval, peta2, pval, `  `)]
+  X
+}
+
+
 
 #' @title LMM and LM results summary
 #' @description Formats the results from LMM and LM. Provides effect sizes.
