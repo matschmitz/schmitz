@@ -99,7 +99,7 @@ ss <- function(mdl) {
       ` `     = coefs,
       b       = sprintf("%.2f", `Estimate`),
       `95%CI` = sprintf("(%.2f, %.2f)", confints[, 1], confints[, 2]),
-      # SE      = sprintf("%.2f", `Std. Error`),
+      SE      = sprintf("%.2f", `Std. Error`),
       df      = sprintf("%.f", df),
       Fval    = sprintf("%.2f", Fval),
       peta2   = schmitz::round3(`pEta-sqr`),
